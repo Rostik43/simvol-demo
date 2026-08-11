@@ -105,8 +105,15 @@
   .veil::before{content:"";position:absolute;inset:0;background:linear-gradient(100deg,rgba(10,1,64,.58) 0%,rgba(10,1,64,.28) 34%,transparent 62%)}
   .grain{position:absolute;inset:0;pointer-events:none;opacity:.05;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E")}
   .hero-content{position:relative;z-index:10;padding-bottom:5rem;width:100%}
-  .hero h1{font-size:clamp(1.9rem,3.9vw,3.7rem);line-height:1.16;min-height:3.48em;color:#fff;text-shadow:0 2px 28px rgba(10,1,64,.5),0 1px 8px rgba(10,1,64,.35)}
+  .hero h1{font-size:clamp(1.9rem,3.9vw,3.7rem);line-height:1.16;color:#fff;text-shadow:0 2px 28px rgba(10,1,64,.5),0 1px 8px rgba(10,1,64,.35)}
   .hero h1 em{font-style:normal;color:var(--glow);text-shadow:0 2px 28px rgba(10,1,64,.6),0 1px 8px rgba(10,1,64,.4)}
+  /* два текстовых слоя миров: никакой подмены innerHTML — только прозрачность */
+  .hero-swap{display:grid}
+  .hero-swap .hs{grid-area:1/1;transition:opacity .7s ease;pointer-events:none}
+  .hero-swap .hs.city-t{opacity:1}
+  .hero-swap .hs.sea-t{opacity:0}
+  body.sea .hero-swap .hs.city-t{opacity:0}
+  body.sea .hero-swap .hs.sea-t{opacity:1}
   .hero .eyebrow{color:var(--glow);display:inline-flex;align-items:center;gap:.6rem;border:1px solid rgba(255,255,255,.18);border-radius:999px;padding:.55rem 1.1rem;letter-spacing:.28em;font-size:.64rem;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
   .hero-actions{display:flex;gap:1rem;margin-top:2.4rem;flex-wrap:wrap}
   .btn{font-family:inherit;font-size:.85rem;font-weight:600;letter-spacing:.04em;border-radius:999px;padding:1.02rem 2.1rem;cursor:pointer;text-decoration:none;display:inline-block;transition:all .25s;border:1px solid transparent}
@@ -467,8 +474,16 @@
       <button id="wCity" class="on">Город</button>
       <button id="wSea">Море</button>
     </div>
-    <p class="eyebrow" id="heroEyebrow">Строим то, что ценно · Ижевск</p>
-    <h1 class="display" id="heroTitle">Создаем пространства,<br>в которых хочется жить,<br><em>мечтать и расти</em></h1>
+    <div class="hero-swap">
+      <div class="hs city-t">
+        <p class="eyebrow">Строим то, что ценно · Ижевск</p>
+        <h1 class="display">Создаем пространства,<br>в которых хочется жить,<br><em>мечтать и расти</em></h1>
+      </div>
+      <div class="hs sea-t" aria-hidden="true">
+        <p class="eyebrow">Строим то, что ценно · Крым</p>
+        <h1 class="display">Море, к которому<br>возвращаются<br><em>каждое лето</em></h1>
+      </div>
+    </div>
     <div class="hero-actions">
       <a class="btn btn-fill btn-nest" href="#lead">Выбрать квартиру <span class="btn-ico">↗</span></a>
       <a class="btn btn-ghost" href="#projects">Смотреть проекты</a>
@@ -897,29 +912,17 @@
 
   /* --- переключатель миров: город (Леонов) ⇄ море (Ласка) --- */
   const bCity = document.getElementById('wCity'), bSea = document.getElementById('wSea');
-  const hTitle = document.getElementById('heroTitle'), hEye = document.getElementById('heroEyebrow');
-  const WORLDS = {
-    city: { eye:'Строим то, что ценно · Ижевск',
-            title:'Создаем пространства,<br>в которых хочется жить,<br><em>мечтать и расти</em>' },
-    sea:  { eye:'Строим то, что ценно · Крым',
-            title:'Море, к которому<br>возвращаются<br><em>каждое лето</em>' }
-  };
-  let worldIsSea = false, worldTimer = null;
+  let worldIsSea = false;
   function setWorld(sea){
-    if (sea === worldIsSea) return;      /* повторный клик в тот же мир — игнор */
+    if (sea === worldIsSea) return;
     worldIsSea = sea;
-    clearTimeout(worldTimer);            /* сбрасываем незавершённую подмену текста */
+    /* текст живёт в двух постоянных слоях — переключается только CSS-класс,
+       innerHTML не трогаем (лечит «призрачный» двойной текст в Safari) */
     document.body.classList.toggle('sea', sea);
     bCity.classList.toggle('on', !sea); bSea.classList.toggle('on', sea);
     vCity.classList.toggle('on', !sea); vSea.classList.toggle('on', sea);
     if (sea){ vSea.play().catch(()=>{}); vCity.pause(); }
     else { vCity.play().catch(()=>{}); vSea.pause(); }
-    [hTitle, hEye].forEach(el => { el.style.transition = 'opacity .45s'; el.style.opacity = 0; });
-    worldTimer = setTimeout(() => {
-      const t = worldIsSea ? WORLDS.sea : WORLDS.city;  /* текст берём по АКТУАЛЬНОМУ миру */
-      hTitle.innerHTML = t.title; hEye.textContent = t.eye;
-      hTitle.style.opacity = 1; hEye.style.opacity = 1;
-    }, 450);
   }
   if (bCity && bSea){
     bCity.addEventListener('click', () => setWorld(false));
