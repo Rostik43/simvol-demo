@@ -109,13 +109,15 @@
   .hero h1 em{font-style:normal;color:var(--glow);text-shadow:0 2px 28px rgba(10,1,64,.6),0 1px 8px rgba(10,1,64,.4)}
   /* два текстовых слоя миров: никакой подмены innerHTML — только прозрачность */
   .hero-swap{display:grid}
-  .hero-swap .hs{grid-area:1/1;pointer-events:none}
-  /* последовательная смена: уходящий слой гаснет полностью (.18s), новый появляется после (.2s delay) —
-     ни в один момент оба текста не видны одновременно */
-  .hero-swap .hs.city-t{opacity:1;transition:opacity .4s ease .2s}
-  .hero-swap .hs.sea-t{opacity:0;transition:opacity .18s ease}
-  body.sea .hero-swap .hs.city-t{opacity:0;transition:opacity .18s ease}
-  body.sea .hero-swap .hs.sea-t{opacity:1;transition:opacity .4s ease .2s}
+  /* will-change + translateZ: Safari держит слои постоянно скомпозиченными и не подсовывает
+     устаревшие снимки (Core Animation ghost) при переключении поверх видео */
+  .hero-swap .hs{grid-area:1/1;pointer-events:none;will-change:opacity;transform:translateZ(0)}
+  /* последовательная смена: уходящий гаснет (.18s) и ЖЁСТКО прячется visibility (Safari обязан
+     уважать её даже при глюке opacity-слоя); новый становится видимым только на .2s */
+  .hero-swap .hs.city-t{opacity:1;visibility:visible;transition:opacity .4s ease .2s,visibility 0s linear .2s}
+  .hero-swap .hs.sea-t{opacity:0;visibility:hidden;transition:opacity .18s ease,visibility 0s linear .18s}
+  body.sea .hero-swap .hs.city-t{opacity:0;visibility:hidden;transition:opacity .18s ease,visibility 0s linear .18s}
+  body.sea .hero-swap .hs.sea-t{opacity:1;visibility:visible;transition:opacity .4s ease .2s,visibility 0s linear .2s}
   .hero .eyebrow{color:var(--glow);display:inline-flex;align-items:center;gap:.6rem;border:1px solid rgba(255,255,255,.18);border-radius:999px;padding:.55rem 1.1rem;letter-spacing:.28em;font-size:.64rem;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
   .hero-actions{display:flex;gap:1rem;margin-top:2.4rem;flex-wrap:wrap}
   .btn{font-family:inherit;font-size:.85rem;font-weight:600;letter-spacing:.04em;border-radius:999px;padding:1.02rem 2.1rem;cursor:pointer;text-decoration:none;display:inline-block;transition:all .25s;border:1px solid transparent}
@@ -425,7 +427,7 @@
   }
 </style>
 </head>
-<body data-build="2026-08-12.3">
+<body data-build="2026-08-12.4">
 <script>console.log('СИМВОЛ превью · сборка', document.body.dataset.build);</script>
 
 <div class="ldr" id="pageLdr" aria-hidden="true">
