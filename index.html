@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<meta name="robots" content="noindex, nofollow">
+<meta name="robots" content="noindex,nofollow">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Символ Девелопмент — превью сайта</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -109,11 +109,13 @@
   .hero h1 em{font-style:normal;color:var(--glow);text-shadow:0 2px 28px rgba(10,1,64,.6),0 1px 8px rgba(10,1,64,.4)}
   /* два текстовых слоя миров: никакой подмены innerHTML — только прозрачность */
   .hero-swap{display:grid}
-  .hero-swap .hs{grid-area:1/1;transition:opacity .7s ease;pointer-events:none}
-  .hero-swap .hs.city-t{opacity:1}
-  .hero-swap .hs.sea-t{opacity:0}
-  body.sea .hero-swap .hs.city-t{opacity:0}
-  body.sea .hero-swap .hs.sea-t{opacity:1}
+  .hero-swap .hs{grid-area:1/1;pointer-events:none}
+  /* последовательная смена: уходящий слой гаснет полностью (.3s), новый появляется после (.34s delay) —
+     ни в один момент оба текста не видны одновременно */
+  .hero-swap .hs.city-t{opacity:1;transition:opacity .45s ease .34s}
+  .hero-swap .hs.sea-t{opacity:0;transition:opacity .3s ease}
+  body.sea .hero-swap .hs.city-t{opacity:0;transition:opacity .3s ease}
+  body.sea .hero-swap .hs.sea-t{opacity:1;transition:opacity .45s ease .34s}
   .hero .eyebrow{color:var(--glow);display:inline-flex;align-items:center;gap:.6rem;border:1px solid rgba(255,255,255,.18);border-radius:999px;padding:.55rem 1.1rem;letter-spacing:.28em;font-size:.64rem;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
   .hero-actions{display:flex;gap:1rem;margin-top:2.4rem;flex-wrap:wrap}
   .btn{font-family:inherit;font-size:.85rem;font-weight:600;letter-spacing:.04em;border-radius:999px;padding:1.02rem 2.1rem;cursor:pointer;text-decoration:none;display:inline-block;transition:all .25s;border:1px solid transparent}
