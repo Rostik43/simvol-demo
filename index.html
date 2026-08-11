@@ -110,12 +110,12 @@
   /* два текстовых слоя миров: никакой подмены innerHTML — только прозрачность */
   .hero-swap{display:grid}
   .hero-swap .hs{grid-area:1/1;pointer-events:none}
-  /* последовательная смена: уходящий слой гаснет полностью (.3s), новый появляется после (.34s delay) —
+  /* последовательная смена: уходящий слой гаснет полностью (.18s), новый появляется после (.2s delay) —
      ни в один момент оба текста не видны одновременно */
-  .hero-swap .hs.city-t{opacity:1;transition:opacity .45s ease .34s}
-  .hero-swap .hs.sea-t{opacity:0;transition:opacity .3s ease}
-  body.sea .hero-swap .hs.city-t{opacity:0;transition:opacity .3s ease}
-  body.sea .hero-swap .hs.sea-t{opacity:1;transition:opacity .45s ease .34s}
+  .hero-swap .hs.city-t{opacity:1;transition:opacity .4s ease .2s}
+  .hero-swap .hs.sea-t{opacity:0;transition:opacity .18s ease}
+  body.sea .hero-swap .hs.city-t{opacity:0;transition:opacity .18s ease}
+  body.sea .hero-swap .hs.sea-t{opacity:1;transition:opacity .4s ease .2s}
   .hero .eyebrow{color:var(--glow);display:inline-flex;align-items:center;gap:.6rem;border:1px solid rgba(255,255,255,.18);border-radius:999px;padding:.55rem 1.1rem;letter-spacing:.28em;font-size:.64rem;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
   .hero-actions{display:flex;gap:1rem;margin-top:2.4rem;flex-wrap:wrap}
   .btn{font-family:inherit;font-size:.85rem;font-weight:600;letter-spacing:.04em;border-radius:999px;padding:1.02rem 2.1rem;cursor:pointer;text-decoration:none;display:inline-block;transition:all .25s;border:1px solid transparent}
