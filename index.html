@@ -1,0 +1,1216 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Символ Девелопмент — превью сайта</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  /* фирменный шрифт Bounded (OFL) — самохостинг из брендбука */
+  @font-face{font-family:'Bounded';src:url('fonts/Bounded-Regular.ttf') format('truetype');font-weight:400;font-display:swap}
+  @font-face{font-family:'Bounded';src:url('fonts/Bounded-ExtraLight.ttf') format('truetype');font-weight:200;font-display:swap}
+  :root{
+    /* палитра из логобука Символ Девелопмент */
+    --night:#110163;      /* тёмно-синий бренда */
+    --dusk:#310382;       /* сине-пурпурный (основной) */
+    --violet:#5703AC;     /* королевский пурпурный (акцент/CTA) */
+    --violet-hover:#46028A;
+    --lilac:#A879E8;
+    --glow:#D9CCF5;
+    --mist:#EBEDF2;       /* холодный серый бренда, 70% сайта по ТЗ */
+    --paper:#F7F8FB;
+    --ink:#1B1730;
+    --grey:#8B87A0;
+    /* суб-цвета проектов (приём Sminex: своя палитра на каждый ЖК) */
+    --met:#6C57C9; --leo:#3E6FA8; --mon:#4A4A58; --sok:#2E8C8C; --las:#C98A57; --vys:#7A5476;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:auto}
+  body{font-family:'Jost',sans-serif;background:var(--mist);color:var(--ink);overflow-x:hidden}
+  h1,h2,h3{font-weight:500}
+  .display{font-family:'Bounded',sans-serif;font-weight:300;letter-spacing:-.015em}
+  .container{max-width:1400px;margin:0 auto;padding:0 3rem}
+  section{position:relative}
+  .eyebrow{font-size:.72rem;font-weight:600;letter-spacing:.4em;text-transform:uppercase;color:var(--violet);margin-bottom:1.2rem}
+  .dark .eyebrow{color:var(--glow)}
+  .section-title{font-size:clamp(1.6rem,2.9vw,2.7rem);line-height:1.18;color:var(--ink)}
+  .dark .section-title{color:#fff}
+  .reveal{opacity:0;transform:translateY(36px)}
+
+  /* ---------- ХЕДЕР: прозрачный → плотный, прячется при скролле вниз ---------- */
+  .header{
+    position:fixed;inset:0 0 auto 0;z-index:100;
+    display:flex;align-items:center;gap:2.2rem;
+    padding:1.3rem 3rem;
+    color:#fff;
+    border-bottom:1px solid rgba(255,255,255,.18);
+    transition:background .35s,color .35s,transform .4s,border-color .35s,padding .35s;
+  }
+  .header.hidden{transform:translateY(-100%)}
+  .header.solid{
+    background:rgba(251,250,254,.86);
+    -webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);
+    color:var(--ink);
+    border-color:rgba(27,23,48,.08);
+    padding:.9rem 3rem;
+  }
+  .logo{display:block;text-decoration:none}
+  .logo img{height:40px;display:block}
+  .logo .ld{display:none}
+  .header.solid .lw{display:none}
+  .header.solid .ld{display:block}
+  .nav{display:flex;gap:1.7rem;margin-left:auto}
+  .nav a{color:inherit;opacity:.85;text-decoration:none;font-size:.8rem;font-weight:500;letter-spacing:.05em;transition:opacity .2s}
+  .nav a:hover,.nav a:focus-visible{opacity:1}
+  .header-right{display:flex;align-items:center;gap:1.2rem}
+  .phone{color:inherit;text-decoration:none;font-size:.85rem;font-weight:700;white-space:nowrap}
+  .cta-mini{
+    font-family:inherit;font-size:.78rem;font-weight:600;letter-spacing:.04em;
+    color:#fff;background:var(--violet);border:none;border-radius:999px;
+    padding:.68rem 1.35rem;cursor:pointer;white-space:nowrap;transition:background .25s,transform .2s;
+  }
+  .cta-mini:hover{background:var(--violet-hover);transform:translateY(-1px)}
+  .burger{display:none;background:none;border:none;cursor:pointer;padding:.4rem}
+  .burger span{display:block;width:22px;height:1.5px;background:currentColor;margin:5px 0}
+
+  /* ---------- HERO ---------- */
+  .hero{height:100vh;min-height:640px;display:flex;flex-direction:column;justify-content:flex-end;overflow:hidden;color:#fff;background:#0A0140}
+  .hero-visual{position:absolute;inset:0;will-change:transform}
+  .hero-fallback{position:absolute;inset:-12%;background:
+      radial-gradient(90% 70% at 78% 18%,rgba(87,3,172,.5),transparent 62%),
+      radial-gradient(75% 65% at 12% 85%,rgba(74,58,140,.55),transparent 65%),
+      radial-gradient(45% 40% at 55% 55%,rgba(168,121,232,.22),transparent 70%),
+      #0A0140;
+    animation:silkdrift 26s cubic-bezier(.45,0,.55,1) infinite alternate}
+  @keyframes silkdrift{to{transform:translate(3%,-3%) scale(1.12)}}
+  #silk{position:absolute;inset:0;width:100%;height:100%;opacity:0;transition:opacity 1.4s ease}
+  #silk.on{opacity:1}
+  /* два мира: город (Леонов) и море (Ласка) */
+  .hero-vid{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity 1.3s ease}
+  .hero-vid.on{opacity:1}
+  /* переключатель миров */
+  .worlds{display:inline-flex;gap:.25rem;padding:.3rem;border:1px solid rgba(255,255,255,.28);border-radius:999px;
+    background:rgba(17,1,99,.28);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);margin-bottom:1.6rem}
+  .worlds button{font-family:'Jost',sans-serif;font-size:.76rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;
+    color:rgba(255,255,255,.7);background:transparent;border:none;border-radius:999px;padding:.6rem 1.5rem;cursor:pointer;
+    transition:all .5s cubic-bezier(.32,.72,0,1)}
+  .worlds button.on{background:#fff;color:var(--night)}
+  /* двойное затемнение поверх медиа — приём MR Group */
+  .veil{position:absolute;inset:0;background:linear-gradient(0deg,rgba(0,0,0,.1),rgba(0,0,0,.1));pointer-events:none}
+  .veil::after{content:"";position:absolute;inset:0;background:linear-gradient(to bottom,rgba(17,1,99,.45),transparent 40%,rgba(17,1,99,.55) 100%)}
+  /* мягкая тень под текстовой зоной слева — держит контраст на светлых кадрах (море) */
+  .veil::before{content:"";position:absolute;inset:0;background:linear-gradient(100deg,rgba(10,1,64,.58) 0%,rgba(10,1,64,.28) 34%,transparent 62%)}
+  .grain{position:absolute;inset:0;pointer-events:none;opacity:.05;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E")}
+  .hero-content{position:relative;z-index:10;padding-bottom:5rem;width:100%}
+  .hero h1{font-size:clamp(1.9rem,3.9vw,3.7rem);line-height:1.16;color:#fff;text-shadow:0 2px 28px rgba(10,1,64,.5),0 1px 8px rgba(10,1,64,.35)}
+  .hero h1 em{font-style:normal;color:var(--glow);text-shadow:0 2px 28px rgba(10,1,64,.6),0 1px 8px rgba(10,1,64,.4)}
+  .hero .eyebrow{color:var(--glow);display:inline-flex;align-items:center;gap:.6rem;border:1px solid rgba(255,255,255,.18);border-radius:999px;padding:.55rem 1.1rem;letter-spacing:.28em;font-size:.64rem;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+  .hero-actions{display:flex;gap:1rem;margin-top:2.4rem;flex-wrap:wrap}
+  .btn{font-family:inherit;font-size:.85rem;font-weight:600;letter-spacing:.04em;border-radius:999px;padding:1.02rem 2.1rem;cursor:pointer;text-decoration:none;display:inline-block;transition:all .25s;border:1px solid transparent}
+  .btn-fill{background:var(--violet);color:#fff;border-color:var(--violet)}
+  .btn-fill:hover{background:var(--violet-hover);transform:translateY(-2px)}
+  .btn-ghost{background:transparent;color:#fff;border-color:rgba(255,255,255,.4)}
+  .btn-ghost:hover{border-color:#fff;transform:translateY(-2px)}
+  /* кнопка-в-кнопке: стрелка в собственном круге */
+  .btn-nest{display:inline-flex;align-items:center;gap:.9rem;padding:.5rem .5rem .5rem 1.7rem}
+  .btn-ico{width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,.18);display:grid;place-items:center;font-size:1rem;transition:transform .6s cubic-bezier(.32,.72,0,1)}
+  .btn-nest:hover .btn-ico{transform:translate(2px,-2px) scale(1.06)}
+
+  /* ---------- ПРОЕКТЫ ---------- */
+  .projects{padding:7rem 0 5rem;background:var(--mist)}
+  .projects-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.6rem;margin-top:3.2rem}
+  .pcard{
+    position:relative;border-radius:1.2rem;overflow:hidden;min-height:380px;
+    display:flex;flex-direction:column;justify-content:flex-end;
+    color:#fff;text-decoration:none;isolation:isolate;
+  }
+  .pcard-bg{position:absolute;inset:0;z-index:-1;width:100%;height:100%;object-fit:cover;display:block;transition:transform .8s cubic-bezier(.2,.6,.2,1)}
+  .pcard:hover .pcard-bg{transform:scale(1.05)}
+  /* spotlight: подсветка за курсором */
+  .pcard::before{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;opacity:0;transition:opacity .4s;
+    background:radial-gradient(320px circle at var(--mx,50%) var(--my,50%),rgba(168,121,232,.22),transparent 65%)}
+  .pcard:hover::before{opacity:1}
+  .pcard::after{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(to top,rgba(10,8,22,.72),rgba(10,8,22,.05) 55%)}
+  .pcard-body{padding:1.8rem;display:flex;flex-direction:column;gap:.45rem}
+  .pcard .chips{display:flex;gap:.5rem;position:absolute;top:1.3rem;left:1.3rem}
+  .chip{font-size:.66rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;padding:.38rem .8rem;border-radius:999px;background:rgba(255,255,255,.16);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,.25)}
+  .pcard h3{font-family:'Bounded',sans-serif;font-weight:400;font-size:1.5rem;line-height:1.15;letter-spacing:-.01em}
+  .pcard .tagline{font-size:.85rem;opacity:.85}
+  .pcard .meta{display:flex;justify-content:space-between;align-items:center;margin-top:.9rem;font-size:.82rem}
+  .pcard .price{font-weight:700}
+  .pcard .arrow{width:38px;height:38px;border-radius:50%;border:1px solid rgba(255,255,255,.4);display:grid;place-items:center;transition:background .25s,transform .25s}
+  .pcard:hover .arrow{background:rgba(255,255,255,.15);transform:translateX(4px)}
+
+  /* ---------- РЕНДЕР → РЕАЛЬНОСТЬ ---------- */
+  .compare-section{padding:7rem 0;background:var(--paper)}
+  .compare{
+    position:relative;margin-top:3.2rem;border-radius:1.2rem;overflow:hidden;
+    height:min(62vh,560px);user-select:none;touch-action:none;cursor:ew-resize;
+  }
+  .compare .layer{position:absolute;inset:0}
+  .compare .after-layer{clip-path:inset(0 0 0 50%)}
+  .compare-divider{
+    position:absolute;top:0;bottom:0;left:50%;width:2px;background:#fff;z-index:5;
+    box-shadow:0 0 20px rgba(0,0,0,.3);transform:translateX(-1px);
+  }
+  .compare-handle{
+    position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);z-index:6;
+    width:56px;height:56px;border-radius:50%;background:#fff;
+    display:grid;place-items:center;box-shadow:0 8px 30px rgba(17,1,99,.35);
+    font-size:.9rem;color:var(--night);letter-spacing:-.05em;
+  }
+  .compare-label{position:absolute;top:1.2rem;z-index:4;font-size:.7rem;font-weight:700;letter-spacing:.24em;text-transform:uppercase;color:#fff;background:rgba(10,8,22,.5);padding:.5rem 1rem;border-radius:999px;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+  .compare-label.l{left:1.2rem}.compare-label.r{right:1.2rem}
+
+  /* ---------- ЦИФРЫ ---------- */
+  .stats{padding:7rem 0;background:var(--night);color:#fff;overflow:hidden}
+  .stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:2rem;margin-top:3.6rem}
+  .stat .num{font-family:'Bounded',sans-serif;font-weight:200;font-size:clamp(2.4rem,4.4vw,4rem);line-height:1;color:var(--glow)}
+  .stat .num small{font-size:.5em}
+  .stat .cap{margin-top:.8rem;font-size:.85rem;color:rgba(245,243,251,.7);max-width:18ch}
+  .stats-marquee{margin-top:5rem;white-space:nowrap;overflow:hidden;-webkit-mask-image:linear-gradient(to right,transparent,#000 12%,#000 88%,transparent);mask-image:linear-gradient(to right,transparent,#000 12%,#000 88%,transparent)}
+  .stats-marquee .track{display:inline-block;font-family:'Bounded',sans-serif;font-weight:200;font-size:clamp(1.7rem,3.4vw,3rem);color:rgba(168,121,232,.35);animation:marq 40s linear infinite}
+  @keyframes marq{to{transform:translateX(-50%)}}
+
+  /* ---------- АКЦИИ ---------- */
+  .promos{padding:7rem 0;background:linear-gradient(160deg,#7C3BD6,#5703AC)}
+  .promos .section-title,.promos .eyebrow{color:#fff}
+  .promos .eyebrow{color:rgba(255,255,255,.85)}
+  .promos-row{display:grid;grid-template-columns:repeat(4,1fr);gap:1.4rem;margin-top:3.2rem}
+  .story{
+    position:relative;aspect-ratio:3/4.6;border-radius:1.1rem;overflow:hidden;
+    display:flex;flex-direction:column;justify-content:flex-end;padding:1.4rem;
+    color:#fff;text-decoration:none;
+    background:linear-gradient(to top,rgba(15,11,32,.85),rgba(15,11,32,.2) 60%),var(--night);
+    transition:transform .35s cubic-bezier(.2,.6,.2,1),box-shadow .35s;
+  }
+  .story:hover{transform:translateY(-8px);box-shadow:0 24px 50px rgba(20,13,50,.35)}
+  .story .ring{position:absolute;top:1.1rem;left:1.1rem;width:34px;height:34px;border-radius:50%;border:2px solid var(--glow);display:grid;place-items:center;font-size:.7rem;font-weight:700}
+  .story .ad{position:absolute;top:1.2rem;right:1.1rem;font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;opacity:.55}
+  .story h3{font-size:1.15rem;font-weight:600;line-height:1.25}
+  .story p{font-size:.78rem;opacity:.75;margin-top:.4rem}
+  .story .bgfx{position:absolute;inset:0;z-index:-1;opacity:.9}
+
+  /* ---------- ВЕЕР ПРОЕКТОВ ---------- */
+  .fan{position:relative;height:66vh;min-height:460px;margin-top:2.4rem;overflow:hidden}
+  .fan-stage{position:absolute;inset:0;cursor:grab;user-select:none;-webkit-user-select:none}
+  .fan-stage:active{cursor:grabbing}
+  .fan-nav{position:absolute;top:.4rem;right:.4rem;z-index:6;display:flex;gap:.5rem}
+  .fan-btn{width:44px;height:44px;border-radius:50%;border:1px solid rgba(27,23,48,.22);background:rgba(255,255,255,.7);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);color:var(--ink);font-size:1.25rem;line-height:1;cursor:pointer;transition:all .25s}
+  .fan-btn:hover{background:var(--violet);border-color:var(--violet);color:#fff}
+  .fan-card{position:absolute;left:50%;top:0;width:150px;height:210px;margin-left:-75px;will-change:transform;cursor:pointer;perspective:1000px;opacity:0}
+  .fan-inner{position:relative;width:100%;height:100%;transform-style:preserve-3d;transition:transform .7s cubic-bezier(.32,.72,0,1)}
+  .fan-card:hover .fan-inner,.fan-card:focus-visible .fan-inner{transform:rotateY(180deg)}
+  .fan-face{position:absolute;inset:0;border-radius:.9rem;overflow:hidden;backface-visibility:hidden;-webkit-backface-visibility:hidden;box-shadow:0 18px 44px rgba(17,1,99,.28)}
+  .fan-face img{width:100%;height:100%;object-fit:cover;display:block}
+  .fan-back{transform:rotateY(180deg);background:var(--night);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.5rem;color:#fff}
+  .fan-back .t{font-family:'Bounded',sans-serif;font-size:.7rem;font-weight:400;text-align:center;padding:0 .5rem;line-height:1.3}
+  .fan-back .s{font-size:.58rem;color:var(--lilac);letter-spacing:.22em;text-transform:uppercase}
+  @media(max-width:900px){.fan{height:44vh;min-height:320px}.fan-card{width:96px;height:134px;margin-left:-48px}}
+
+  /* фото-слои в сторис-карточках */
+  .story .ph{position:absolute;inset:0;z-index:0;width:100%;height:100%;object-fit:cover}
+  .story .shade{position:absolute;inset:0;z-index:1;background:linear-gradient(to top,rgba(15,11,32,.88),rgba(15,11,32,.18) 60%)}
+  .story h3,.story p{position:relative;z-index:2}
+  .story .ring,.story .ad{z-index:3}
+
+  /* построчное проявление заголовков */
+  .tr-line{display:block;overflow:hidden}
+  .tr-line .tr-in{display:block;transform:translateY(115%)}
+
+  /* ---------- КАРТА ---------- */
+  .map-sec{padding:7rem 0;background:#0D0921;color:#fff}
+  .map-controls{display:flex;justify-content:space-between;align-items:center;gap:1rem;margin-top:2.2rem;flex-wrap:wrap}
+  .map-cities,.map-filters{display:flex;gap:.6rem;flex-wrap:wrap}
+  .mchip,.fchip{font-family:inherit;font-size:.8rem;font-weight:600;color:rgba(245,243,251,.72);background:transparent;border:1px solid rgba(255,255,255,.2);border-radius:999px;padding:.6rem 1.3rem;cursor:pointer;transition:all .25s}
+  .mchip:hover,.fchip:hover{border-color:var(--lilac)}
+  .mchip.active,.fchip.active{background:var(--violet);border-color:var(--violet);color:#fff}
+  .map-panel{position:relative;margin-top:1.6rem;height:min(62vh,560px);border-radius:1.2rem;overflow:hidden;background:#120D2B;border:1px solid rgba(255,255,255,.08)}
+  .map-bg{position:absolute;inset:0;width:100%;height:100%}
+  .mgroup{position:absolute;inset:0;transition:opacity .5s}
+  .mgroup.hidden{opacity:0;pointer-events:none}
+  .marker{position:absolute;width:20px;height:20px;background:none;border:none;padding:0;cursor:pointer;transform:translate(-50%,-50%)}
+  .marker .dot{position:absolute;inset:5px;border-radius:50%;background:var(--lilac);box-shadow:0 0 14px rgba(168,121,232,.85)}
+  .marker .pulse{position:absolute;inset:-7px;border-radius:50%;border:1px solid rgba(168,121,232,.6);animation:mpulse 2.4s ease-out infinite}
+  @keyframes mpulse{0%{transform:scale(.45);opacity:1}100%{transform:scale(1.9);opacity:0}}
+  .marker .mcard{position:absolute;left:50%;bottom:calc(100% + 12px);transform:translateX(-50%) translateY(5px);background:rgba(17,1,99,.94);border:1px solid rgba(168,121,232,.32);border-radius:.7rem;padding:.7rem 1rem;white-space:nowrap;opacity:0;pointer-events:none;transition:all .3s;display:flex;flex-direction:column;gap:.2rem;text-align:left;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);z-index:5}
+  .marker .mcard b{font-family:'Bounded',sans-serif;font-weight:400;font-size:.72rem;color:#fff}
+  .marker .mcard i{font-style:normal;font-size:.62rem;color:var(--lilac)}
+  .marker:hover .mcard,.marker:focus-visible .mcard{opacity:1;transform:translateX(-50%) translateY(0)}
+  .marker.dim{opacity:.22;pointer-events:none}
+  @media(max-width:900px){.map-sec{padding:4.5rem 0}.map-panel{height:48vh}}
+
+  /* ---------- ПРЕЛОАДЕР: буквы слетаются ---------- */
+  .ldr{position:fixed;inset:0;z-index:400;background:var(--night);display:flex;align-items:center;justify-content:center;transition:opacity .7s,visibility .7s}
+  .ldr.done{opacity:0;visibility:hidden}
+  .ldr .w{font-family:'Bounded',sans-serif;font-weight:200;font-size:clamp(2rem,7vw,4.5rem);letter-spacing:.1em;color:#fff;display:flex}
+  .ldr .w span{display:inline-block;will-change:transform}
+  .ldr .w span:last-child{color:var(--lilac)}
+
+  /* ---------- БУРГЕР-ОВЕРЛЕЙ ---------- */
+  .burger span{transition:transform .4s cubic-bezier(.32,.72,0,1),opacity .3s}
+  .burger.x span:nth-child(1){transform:translateY(6.5px) rotate(45deg)}
+  .burger.x span:nth-child(2){opacity:0}
+  .burger.x span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg)}
+  .menu-ov{position:fixed;inset:0;z-index:95;background:rgba(10,1,64,.96);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);display:flex;align-items:center;justify-content:center;opacity:0;visibility:hidden;transition:opacity .5s,visibility .5s}
+  .menu-ov.open{opacity:1;visibility:visible}
+  .menu-ov nav{display:flex;flex-direction:column;gap:1.4rem;text-align:center}
+  .menu-ov a{font-family:'Bounded',sans-serif;font-weight:200;font-size:clamp(1.3rem,4vw,2.2rem);text-transform:uppercase;color:#fff;text-decoration:none;opacity:0;transform:translateY(30px);transition:color .3s}
+  .menu-ov a:hover{color:var(--lilac)}
+  .menu-ov.open a{animation:mrise .7s cubic-bezier(.22,.7,.25,1) forwards}
+  .menu-ov.open a:nth-child(1){animation-delay:.05s}.menu-ov.open a:nth-child(2){animation-delay:.12s}
+  .menu-ov.open a:nth-child(3){animation-delay:.19s}.menu-ov.open a:nth-child(4){animation-delay:.26s}
+  .menu-ov.open a:nth-child(5){animation-delay:.33s}.menu-ov.open a:nth-child(6){animation-delay:.4s}
+  @keyframes mrise{to{opacity:1;transform:translateY(0)}}
+
+  /* ---------- СДАНО В СРОК ---------- */
+  .done-sec{padding:6.5rem 0;background:var(--mist)}
+  .done-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.3rem;margin-top:2.8rem}
+  .dcard{position:relative;border-radius:1.1rem;overflow:hidden;aspect-ratio:4/5}
+  .dcard img{width:100%;height:100%;object-fit:cover;transition:transform .7s cubic-bezier(.2,.6,.2,1)}
+  .dcard:hover img{transform:scale(1.05)}
+  .dcard::after{content:"";position:absolute;inset:0;background:linear-gradient(to top,rgba(10,1,64,.72),transparent 55%)}
+  .dcard .bd{position:absolute;left:1.3rem;right:1.3rem;bottom:1.2rem;z-index:2;color:#fff}
+  .dcard .bd b{font-family:'Bounded',sans-serif;font-weight:400;font-size:1.05rem;display:block}
+  .dcard .bd span{font-size:.78rem;opacity:.85}
+  .dbadge{position:absolute;top:1rem;left:1rem;z-index:2;font-size:.62rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;background:#fff;color:#2E7D46;border-radius:999px;padding:.4rem .85rem}
+  @media(max-width:900px){.done-grid{grid-template-columns:1fr}.dcard{aspect-ratio:3/2}}
+
+  /* ---------- ЦЕННОСТИ ---------- */
+  .values{padding:6.5rem 0;background:var(--paper)}
+  .vgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.3rem;margin-top:2.8rem}
+  .vc{background:#fff;border:1px solid rgba(27,23,48,.08);border-radius:1.1rem;padding:1.8rem;display:flex;flex-direction:column;gap:.7rem}
+  .vc .no{font-family:'Bounded',sans-serif;font-weight:200;font-size:.8rem;color:var(--violet);letter-spacing:.2em}
+  .vc b{font-family:'Bounded',sans-serif;font-weight:400;font-size:1rem;text-transform:uppercase}
+  .vc p{font-size:.85rem;color:var(--grey);line-height:1.6}
+  .vc.photo{padding:0;overflow:hidden;position:relative;min-height:280px}
+  .vc.photo img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+  .vc.photo .ins{position:absolute;left:0;right:0;bottom:0;padding:1.8rem;background:linear-gradient(to top,rgba(10,1,64,.85),transparent);color:#fff}
+  .vc.photo .ins .no{color:var(--glow)}
+  .vc.photo .ins p{color:rgba(255,255,255,.85)}
+  @media(max-width:900px){.vgrid{grid-template-columns:1fr}}
+
+  /* ---------- СПОСОБЫ ПОКУПКИ ---------- */
+  .pay{padding:6.5rem 0 1rem;background:var(--paper)}
+  .pay-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1.2rem;margin-top:2.8rem}
+  .pc2{background:#fff;border:1px solid rgba(27,23,48,.08);border-radius:1.1rem;padding:1.6rem;transition:box-shadow .3s,transform .3s}
+  .pc2:hover{box-shadow:0 18px 44px rgba(17,1,99,.1);transform:translateY(-3px)}
+  .pc2 .ic{width:44px;height:44px;border-radius:.8rem;background:rgba(87,3,172,.09);color:var(--violet);display:grid;place-items:center;font-size:1.15rem;margin-bottom:1rem;font-weight:600}
+  .pc2 b{font-family:'Bounded',sans-serif;font-weight:400;font-size:.92rem;text-transform:uppercase;display:block;margin-bottom:.45rem}
+  .pc2 p{font-size:.82rem;color:var(--grey);line-height:1.55}
+  @media(max-width:900px){.pay-grid{grid-template-columns:1fr 1fr}}
+
+  /* ---------- ЖИЗНЬ У МОРЯ (Ласка) ---------- */
+  .sea-life{padding:6.5rem 0;background:var(--night);color:#fff;overflow:hidden}
+  .sea-life .section-title{color:#fff}
+  .sl-grid{display:grid;grid-template-columns:1.4fr 1fr;grid-template-rows:auto auto;gap:1.2rem;margin-top:2.8rem}
+  .sl{position:relative;border-radius:1.1rem;overflow:hidden;min-height:240px}
+  .sl:first-child{grid-row:span 2;min-height:500px}
+  .sl img{width:100%;height:100%;object-fit:cover;position:absolute;inset:0;transition:transform .8s cubic-bezier(.2,.6,.2,1)}
+  .sl:hover img{transform:scale(1.04)}
+  .sl::after{content:"";position:absolute;inset:0;background:linear-gradient(to top,rgba(10,1,64,.78),transparent 60%)}
+  .sl .cap{position:absolute;left:1.4rem;right:1.4rem;bottom:1.2rem;z-index:2}
+  .sl .cap b{font-family:'Bounded',sans-serif;font-weight:400;font-size:1rem;display:block;text-transform:uppercase}
+  .sl .cap span{font-size:.8rem;color:rgba(255,255,255,.78)}
+  @media(max-width:900px){.sl-grid{grid-template-columns:1fr}.sl:first-child{grid-row:auto;min-height:280px}}
+
+  /* ---------- ТРИ ДВЕРИ ---------- */
+  .doors{padding:5.5rem 0 1.5rem;background:var(--mist)}
+  .doors-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.4rem;margin-top:2.6rem}
+  .door{position:relative;border-radius:1.1rem;overflow:hidden;min-height:250px;display:flex;align-items:flex-end;padding:1.6rem;color:#fff;text-decoration:none;isolation:isolate}
+  .door img{position:absolute;inset:0;z-index:-1;width:100%;height:100%;object-fit:cover;transition:transform .7s cubic-bezier(.2,.6,.2,1)}
+  .door::after{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(to top,rgba(10,8,22,.78),rgba(10,8,22,.08) 60%)}
+  .door:hover img{transform:scale(1.05)}
+  .door .d-txt b{font-family:'Bounded',sans-serif;font-weight:400;font-size:1.02rem;line-height:1.3;display:block}
+  .door .d-txt span{display:block;font-size:.75rem;opacity:.82;margin-top:.35rem}
+  .door .arrow{position:absolute;top:1.2rem;right:1.2rem;width:38px;height:38px;border-radius:50%;border:1px solid rgba(255,255,255,.45);display:grid;place-items:center;transition:background .25s,transform .25s}
+  .door:hover .arrow{background:rgba(255,255,255,.15);transform:translate(2px,-2px)}
+  @media(max-width:900px){.doors-grid{grid-template-columns:1fr}}
+
+  /* ---------- КАЛЬКУЛЯТОР ---------- */
+  .calc{padding:6.5rem 0;background:var(--paper)}
+  .calc-card{display:grid;grid-template-columns:1fr 1.15fr;gap:2.8rem;background:#fff;border:1px solid rgba(27,23,48,.08);border-radius:1.3rem;padding:2.6rem;margin-top:2.8rem;box-shadow:0 24px 70px rgba(17,1,99,.09)}
+  .calc-flat img{width:100%;aspect-ratio:3/2;object-fit:cover;border-radius:.9rem}
+  .calc-flat .chip-l{display:inline-block;font-size:.64rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--violet);border:1px solid rgba(87,3,172,.35);border-radius:999px;padding:.35rem .8rem;margin-top:1.1rem}
+  .calc-flat h3{font-family:'Bounded',sans-serif;font-weight:400;font-size:1.15rem;margin-top:.8rem}
+  .calc-flat .fprice{font-size:.9rem;color:var(--grey);margin-top:.4rem}
+  .rate-chips{display:flex;gap:.6rem;margin-bottom:1.6rem}
+  .rc{font-family:inherit;font-size:.78rem;font-weight:600;color:var(--ink);background:transparent;border:1px solid rgba(27,23,48,.2);border-radius:999px;padding:.55rem 1.2rem;cursor:pointer;transition:all .25s}
+  .rc.active{background:var(--violet);border-color:var(--violet);color:#fff}
+  .calc .row{margin-bottom:1.3rem}
+  .calc .row .lab{display:flex;justify-content:space-between;font-size:.8rem;color:var(--grey);margin-bottom:.45rem}
+  .calc .row .lab b{color:var(--ink);font-weight:600}
+  .calc input[type=range]{width:100%;accent-color:var(--violet);cursor:pointer}
+  .calc .pay-wrap{border-top:1px solid rgba(27,23,48,.1);padding-top:1.4rem;margin-top:.4rem}
+  .calc .pay-cap{font-size:.75rem;color:var(--grey)}
+  .calc .pay{font-family:'Bounded',sans-serif;font-weight:300;font-size:clamp(1.7rem,3vw,2.5rem);color:var(--violet);margin-top:.3rem}
+  .calc .fine{font-size:.66rem;color:var(--grey);margin-top:1.1rem;line-height:1.5}
+  @media(max-width:900px){.calc-card{grid-template-columns:1fr;padding:1.6rem}}
+
+  /* ---------- ФОРМА ---------- */
+  .lead{padding:7rem 0;background:var(--paper)}
+  .lead-card{
+    margin-top:3rem;background:var(--night);border-radius:1.4rem;color:#fff;
+    padding:3.4rem;display:grid;grid-template-columns:1.1fr 1fr;gap:3rem;align-items:center;
+    position:relative;overflow:hidden;
+  }
+  .lead-card::before{content:"";position:absolute;inset:0;background:radial-gradient(60% 90% at 85% 10%,rgba(87,3,172,.5),transparent 60%)}
+  .lead-card>*{position:relative}
+  .lead-card h2{font-family:'Bounded',sans-serif;font-weight:300;font-size:clamp(1.4rem,2.2vw,2.1rem);line-height:1.25;letter-spacing:-.01em}
+  .lead-card .sub{margin-top:1rem;color:rgba(245,243,251,.7);font-size:.92rem;max-width:38ch}
+  .lead-form{display:flex;flex-direction:column;gap:.9rem}
+  .lead-form input,.lead-form select{
+    font-family:inherit;font-size:.9rem;color:#fff;
+    background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.18);
+    border-radius:.8rem;padding:1rem 1.2rem;outline:none;transition:border-color .2s;
+    -webkit-appearance:none;appearance:none;
+  }
+  .lead-form select{color:rgba(255,255,255,.85)}
+  .lead-form select option{color:var(--ink)}
+  .lead-form input::placeholder{color:rgba(245,243,251,.45)}
+  .lead-form input:focus,.lead-form select:focus{border-color:var(--lilac)}
+  .consent{display:flex;gap:.7rem;align-items:flex-start;font-size:.72rem;color:rgba(245,243,251,.6);line-height:1.5}
+  .consent input{width:16px;height:16px;margin-top:2px;accent-color:var(--violet)}
+  .consent a{color:var(--glow)}
+  .lead-form .btn-fill{width:100%;text-align:center;opacity:.45;pointer-events:none;transition:opacity .25s}
+  .lead-form.valid .btn-fill{opacity:1;pointer-events:auto}
+  .or-line{text-align:center;font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(245,243,251,.45)}
+  .msgr{display:flex;gap:.7rem}
+  .msgr a{flex:1;text-align:center;font-size:.78rem;font-weight:600;color:#fff;border:1px solid rgba(255,255,255,.25);border-radius:.8rem;padding:.85rem;text-decoration:none;transition:border-color .25s,background .25s}
+  .msgr a:hover{border-color:var(--lilac);background:rgba(168,121,232,.1)}
+  /* экран «Что дальше» после отправки */
+  .lead-success{display:none;flex-direction:column;gap:1.2rem}
+  .lead-success .mgr{display:flex;align-items:center;gap:1rem}
+  .lead-success .ava{width:56px;height:56px;border-radius:50%;background:var(--violet);display:grid;place-items:center;font-family:'Bounded',sans-serif;font-weight:400;font-size:1rem;color:#fff}
+  .lead-success .mgr b{display:block;font-size:.95rem}
+  .lead-success .mgr span{font-size:.78rem;color:rgba(245,243,251,.65)}
+  .lead-success ol{margin-left:1.1rem;display:flex;flex-direction:column;gap:.55rem;font-size:.85rem;color:rgba(245,243,251,.8)}
+  .lead-success .note{font-size:.72rem;color:rgba(245,243,251,.55)}
+
+  /* ---------- ФУТЕР ---------- */
+  .footer{background:var(--night);color:rgba(245,243,251,.55);padding:3.4rem 0 2.6rem;font-size:.75rem;line-height:1.7}
+  .footer .cols{display:flex;justify-content:space-between;gap:2rem;flex-wrap:wrap;margin-bottom:2rem;color:rgba(245,243,251,.8)}
+  .footer .cols a{color:inherit;text-decoration:none;display:block;font-size:.8rem;margin-bottom:.5rem}
+  .footer .cols a:hover{color:#fff}
+  .footer .legal{border-top:1px solid rgba(255,255,255,.1);padding-top:1.6rem;max-width:900px}
+
+  @media (prefers-reduced-motion:reduce){
+    *,*::before,*::after{animation-duration:.01s!important;transition-duration:.01s!important}
+    .reveal{opacity:1!important;transform:none!important}
+  }
+  @media (max-width:900px){
+    .container{padding:0 1.3rem}
+    .header{padding:1rem 1.3rem;gap:1rem}
+    .header.solid{padding:.8rem 1.3rem}
+    .nav{display:none}
+    .burger{display:block;margin-left:auto}
+    .header-right .phone{display:none}
+    .projects-grid{grid-template-columns:1fr}
+    .stats-grid{grid-template-columns:1fr 1fr;gap:2.6rem 1.4rem}
+    .promos-row{grid-template-columns:1fr 1fr}
+    .lead-card{grid-template-columns:1fr;padding:2.2rem}
+    .compare{height:52vh}
+  }
+</style>
+</head>
+<body>
+
+<div class="ldr" id="pageLdr" aria-hidden="true">
+  <div class="w" id="ldrWord"><span>С</span><span>И</span><span>М</span><span>В</span><span>О</span><span>Л</span></div>
+</div>
+
+<div class="menu-ov" id="menuOv">
+  <nav>
+    <a href="#projects">Проекты</a>
+    <a href="#pay">Способы покупки</a>
+    <a href="#map">Карта</a>
+    <a href="#promos">Акции</a>
+    <a href="#calc">Ипотека</a>
+    <a href="#lead">Оставить заявку</a>
+  </nav>
+</div>
+
+<header class="header" id="header">
+  <a class="logo" href="#">
+    <img class="lw" src="img/brand/logo-h-white.png" alt="Символ Девелопмент">
+    <img class="ld" src="img/brand/logo-h-dark.png" alt="">
+  </a>
+  <nav class="nav" aria-label="Основное меню">
+    <a href="#projects">Проекты</a>
+    <a href="#">Выбрать недвижимость</a>
+    <a href="#promos">Акции</a>
+    <a href="#">Способы покупки</a>
+    <a href="#">О компании</a>
+    <a href="#">Контакты</a>
+  </nav>
+  <div class="header-right">
+    <a class="phone" href="tel:+73412221530">+7 (3412) 221-530</a>
+    <button class="cta-mini">Оставить заявку</button>
+  </div>
+  <button class="burger" aria-label="Меню"><span></span><span></span><span></span></button>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-visual" id="heroBg">
+    <div class="hero-fallback" aria-hidden="true"></div>
+    <canvas id="silk" aria-hidden="true"></canvas>
+    <video class="hero-vid" id="vidCity" src="img/hero-drone.mp4" poster="img/hero-poster.jpg" autoplay muted loop playsinline aria-hidden="true"></video>
+    <video class="hero-vid" id="vidSea" src="img/hero-sea.mp4" poster="img/hero-sea-poster.jpg" muted loop playsinline preload="none" aria-hidden="true"></video>
+  </div>
+  <div class="veil"></div><div class="grain"></div>
+  <div class="container hero-content">
+    <div class="worlds" role="tablist" aria-label="Выбор мира">
+      <button id="wCity" class="on">Город</button>
+      <button id="wSea">Море</button>
+    </div>
+    <p class="eyebrow" id="heroEyebrow">Строим то, что ценно · Ижевск</p>
+    <h1 class="display" id="heroTitle">Создаем пространства,<br>в которых хочется жить,<br><em>мечтать и расти</em></h1>
+    <div class="hero-actions">
+      <a class="btn btn-fill btn-nest" href="#lead">Выбрать квартиру <span class="btn-ico">↗</span></a>
+      <a class="btn btn-ghost" href="#projects">Смотреть проекты</a>
+    </div>
+  </div>
+</section>
+
+<!-- ТРИ ДВЕРИ: сортировка покупателей за один клик -->
+<section class="doors">
+  <div class="container">
+    <p class="eyebrow reveal">С чего начнём?</p>
+    <h2 class="section-title display">Три пути —<br>выберите свой</h2>
+    <div class="doors-grid">
+      <a class="door reveal" href="#projects">
+        <img src="img/real-leonov.jpg" alt="" loading="lazy">
+        <span class="arrow">→</span>
+        <div class="d-txt"><b>Хочу жить в Ижевске</b><span>Метафора, Леонов, Монблан — кварталы у пруда</span></div>
+      </a>
+      <a class="door reveal" href="#map">
+        <img src="img/real-sok.jpg" alt="" loading="lazy">
+        <span class="arrow">→</span>
+        <div class="d-txt"><b>Хочу к морю</b><span>СОК, Ласка, Высота — Крым, первая линия жизни</span></div>
+      </a>
+      <a class="door reveal" href="#calc">
+        <img src="img/real-monblan.jpg" alt="" loading="lazy">
+        <span class="arrow">→</span>
+        <div class="d-txt"><b>Инвестирую</b><span>Цены от застройщика, рост к сдаче, честные сроки</span></div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ПРОЕКТЫ -->
+<section class="projects" id="projects">
+  <div class="container">
+    <p class="eyebrow reveal">Проекты</p>
+    <h2 class="section-title display reveal">Шесть адресов —<br>у моря и в городе</h2>
+
+    <!-- веер портфолио: вращается по скроллу, карточки переворачиваются -->
+    <div class="fan">
+      <div class="fan-nav">
+        <button class="fan-btn" id="fanPrev" aria-label="Повернуть веер назад">‹</button>
+        <button class="fan-btn" id="fanNext" aria-label="Повернуть веер вперёд">›</button>
+      </div>
+      <div class="fan-stage" id="fanStage">
+        <div class="fan-card" tabindex="0"><div class="fan-inner"><div class="fan-face"><img src="img/real-metafora.jpg" alt="Метафора" loading="lazy"></div><div class="fan-face fan-back"><span class="t">Метафора</span><span class="s">Смотреть</span></div></div></div>
+        <div class="fan-card" tabindex="0"><div class="fan-inner"><div class="fan-face"><img src="img/real-leonov.jpg" alt="Леонов" loading="lazy"></div><div class="fan-face fan-back"><span class="t">Леонов</span><span class="s">Смотреть</span></div></div></div>
+        <div class="fan-card" tabindex="0"><div class="fan-inner"><div class="fan-face"><img src="img/real-monblan.jpg" alt="Монблан" loading="lazy"></div><div class="fan-face fan-back"><span class="t">Монблан</span><span class="s">Смотреть</span></div></div></div>
+        <div class="fan-card" tabindex="0"><div class="fan-inner"><div class="fan-face"><img src="img/real-sok.jpg" alt="СОК" loading="lazy"></div><div class="fan-face fan-back"><span class="t">СОК</span><span class="s">Смотреть</span></div></div></div>
+        <div class="fan-card" tabindex="0"><div class="fan-inner"><div class="fan-face"><img src="img/dvor.jpg" alt="Дворы" loading="lazy"></div><div class="fan-face fan-back"><span class="t">Дворы без машин</span><span class="s">Среда</span></div></div></div>
+        <div class="fan-card" tabindex="0"><div class="fan-inner"><div class="fan-face"><img src="img/laska.jpg" alt="Ласка" loading="lazy"></div><div class="fan-face fan-back"><span class="t">Ласка</span><span class="s">Смотреть</span></div></div></div>
+        <div class="fan-card" tabindex="0"><div class="fan-inner"><div class="fan-face"><img src="img/lobby.jpg" alt="Лобби" loading="lazy"></div><div class="fan-face fan-back"><span class="t">Лобби</span><span class="s">Среда</span></div></div></div>
+        <div class="fan-card" tabindex="0"><div class="fan-inner"><div class="fan-face"><img src="img/vysota.jpg" alt="Высота" loading="lazy"></div><div class="fan-face fan-back"><span class="t">Высота</span><span class="s">Смотреть</span></div></div></div>
+        <div class="fan-card" tabindex="0"><div class="fan-inner"><div class="fan-face"><img src="img/real.jpg" alt="Сдано" loading="lazy"></div><div class="fan-face fan-back"><span class="t">Сдано · 2024</span><span class="s">Реализовано</span></div></div></div>
+      </div>
+    </div>
+
+    <div class="projects-grid">
+      <a class="pcard reveal" href="#">
+        <img class="pcard-bg" src="img/real-metafora.jpg" alt="ЖК Метафора">
+        <div class="chips"><span class="chip">Строится</span><span class="chip">Ижевск</span></div>
+        <div class="pcard-body">
+          <h3>Метафора</h3>
+          <p class="tagline">Новый уровень жизни</p>
+          <div class="meta"><span class="price">от 5,2 млн ₽</span><span class="arrow">→</span></div>
+        </div>
+      </a>
+      <a class="pcard reveal" href="#">
+        <img class="pcard-bg" src="img/real-leonov.jpg" alt="ЖК Леонов">
+        <div class="chips"><span class="chip">Строится</span><span class="chip">Ижевск</span></div>
+        <div class="pcard-body">
+          <h3>Леонов</h3>
+          <p class="tagline">Квартал героев</p>
+          <div class="meta"><span class="price">от 4,8 млн ₽</span><span class="arrow">→</span></div>
+        </div>
+      </a>
+      <a class="pcard reveal" href="#">
+        <img class="pcard-bg" src="img/real-monblan.jpg" alt="ЖК Монблан">
+        <div class="chips"><span class="chip">Сдан</span><span class="chip">Ижевск</span></div>
+        <div class="pcard-body">
+          <h3>Монблан</h3>
+          <p class="tagline">Дом большого города</p>
+          <div class="meta"><span class="price">от 6,1 млн ₽</span><span class="arrow">→</span></div>
+        </div>
+      </a>
+      <a class="pcard reveal" href="#">
+        <img class="pcard-bg" src="img/real-sok.jpg" alt="ЖК СОК">
+        <div class="chips"><span class="chip">Строится</span><span class="chip">Евпатория</span></div>
+        <div class="pcard-body">
+          <h3>СОК</h3>
+          <p class="tagline">Квартал у самого моря</p>
+          <div class="meta"><span class="price">от 7,4 млн ₽</span><span class="arrow">→</span></div>
+        </div>
+      </a>
+      <a class="pcard reveal" href="#">
+        <img class="pcard-bg" src="img/laska.jpg" alt="ЖК Ласка">
+        <div class="chips"><span class="chip">Строится</span><span class="chip">Алушта</span></div>
+        <div class="pcard-body">
+          <h3>Ласка</h3>
+          <p class="tagline">Террасы над морем</p>
+          <div class="meta"><span class="price">от 8,1 млн ₽</span><span class="arrow">→</span></div>
+        </div>
+      </a>
+      <a class="pcard reveal" href="#">
+        <img class="pcard-bg" src="img/vysota.jpg" alt="ЖК Высота">
+        <div class="chips"><span class="chip">Проектируется</span><span class="chip">Ялта</span></div>
+        <div class="pcard-body">
+          <h3>Высота</h3>
+          <p class="tagline">Город и море с высоты</p>
+          <div class="meta"><span class="price">цена по запросу</span><span class="arrow">→</span></div>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- РЕНДЕР → РЕАЛЬНОСТЬ -->
+<section class="compare-section">
+  <div class="container">
+    <p class="eyebrow reveal">Реализованные проекты</p>
+    <h2 class="section-title display reveal">Обещали — построили.<br>Сдвиньте и сравните</h2>
+    <div class="compare reveal" id="compare" aria-label="Сравнение: рендер и реальность">
+      <div class="layer before-layer">
+        <img src="img/render.jpg" alt="Рендер проекта" style="width:100%;height:100%;object-fit:cover;display:block">
+      </div>
+      <div class="layer after-layer">
+        <img src="img/real.jpg" alt="Построенный дом" style="width:100%;height:100%;object-fit:cover;display:block">
+      </div>
+      <div class="compare-divider" id="cmpDivider"></div>
+      <div class="compare-handle" id="cmpHandle">⇄</div>
+      <span class="compare-label l">Рендер</span>
+      <span class="compare-label r">Реальность</span>
+    </div>
+  </div>
+</section>
+
+<!-- СДАНО В СРОК -->
+<section class="done-sec">
+  <div class="container">
+    <p class="eyebrow reveal">Реализованные проекты</p>
+    <h2 class="section-title display">Пять адресов уже живут</h2>
+    <div class="done-grid">
+      <div class="dcard reveal"><span class="dbadge">Сдан в срок</span><img src="img/gagarin-real.jpg" alt="Гагарин" loading="lazy"><div class="bd"><b>Гагарин</b><span>Ижевск · заселён</span></div></div>
+      <div class="dcard reveal"><span class="dbadge">Сдан в срок</span><img src="img/lomonosov-real.jpg" alt="Ломоносов" loading="lazy"><div class="bd"><b>Ломоносов</b><span>Ижевск · заселён</span></div></div>
+      <div class="dcard reveal"><span class="dbadge">Сдан в срок</span><img src="img/real-monblan.jpg" alt="Монблан" loading="lazy"><div class="bd"><b>Монблан</b><span>Ижевск · сдан в 2024</span></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ЦЕННОСТИ -->
+<section class="values">
+  <div class="container">
+    <p class="eyebrow reveal">Ценности</p>
+    <h2 class="section-title display">Строим то, что ценно</h2>
+    <div class="vgrid">
+      <div class="vc reveal"><span class="no">01</span><b>Надёжность</b><p>Каждый проект доводим до результата: пять сданных домов — все в срок. Гагарин, Ломоносов, Матросов, Чкалов, Монблан уже живут.</p></div>
+      <div class="vc reveal"><span class="no">02</span><b>Развитие</b><p>Выходим за пределы регионов и стандартов: начали с кварталов у пруда — строим террасы над Чёрным морем.</p></div>
+      <div class="vc photo reveal"><img src="img/engineering.jpg" alt="Инженерные коммуникации" loading="lazy"><div class="ins"><span class="no">03</span><b style="color:#fff">Ответственность</b><p>Строим как для себя — вплоть до разводки труб, которую никто не увидит. Это фото с нашей стройки.</p></div></div>
+      <div class="vc reveal"><span class="no">04</span><b>Инновации</b><p>Внедряем технологии будущего: умные дворы, видеонаблюдение, цифровые сервисы для жителей.</p></div>
+      <div class="vc reveal"><span class="no">05</span><b>Человекоцентричность</b><p>Создаём не квадратные метры, а среду для жизни: дворы без машин, свет как в лобби отеля, соседи, которых выбирают.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ЦИФРЫ -->
+<section class="stats dark">
+  <div class="container">
+    <p class="eyebrow reveal">Символ в цифрах</p>
+    <h2 class="section-title display reveal">Строим репутацию<br>дом за домом</h2>
+    <div class="stats-grid">
+      <div class="stat reveal"><div class="num"><span data-count="2">0</span></div><div class="cap">региона: Удмуртия и Крым</div></div>
+      <div class="stat reveal"><div class="num"><span data-count="5">0</span><small>+</small></div><div class="cap">лет опыта в девелопменте</div></div>
+      <div class="stat reveal"><div class="num"><span data-count="10">0</span><small>+</small></div><div class="cap">реализованных проектов</div></div>
+      <div class="stat reveal"><div class="num"><span data-count="6">0</span></div><div class="cap">жилых комплексов в работе</div></div>
+    </div>
+  </div>
+  <div class="stats-marquee" aria-hidden="true">
+    <span class="track">Метафора · Леонов · Монблан · СОК · Ласка · Высота · Метафора · Леонов · Монблан · СОК · Ласка · Высота · </span>
+  </div>
+</section>
+
+<!-- КАРТА -->
+<section class="map-sec dark" id="map">
+  <div class="container">
+    <p class="eyebrow reveal">География</p>
+    <h2 class="section-title display">Проекты на карте</h2>
+    <div class="map-controls reveal">
+      <div class="map-cities">
+        <button class="mchip active" data-city="izh">Ижевск</button>
+        <button class="mchip" data-city="crimea">Крым</button>
+      </div>
+      <div class="map-filters">
+        <button class="fchip active" data-f="all">Все проекты</button>
+        <button class="fchip" data-f="build">Строятся</button>
+        <button class="fchip" data-f="done">Сданы</button>
+      </div>
+    </div>
+    <div class="map-panel reveal" id="mapPanel">
+      <svg class="map-bg" viewBox="0 0 1200 620" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+        <rect width="1200" height="620" fill="#120D2B"/>
+        <g stroke="#1B1540" stroke-width="1">
+          <path d="M0 120 H1200 M0 250 H1200 M0 380 H1200 M0 510 H1200"/>
+          <path d="M180 0 V620 M420 0 V620 M660 0 V620 M900 0 V620 M1080 0 V620"/>
+        </g>
+        <path d="M-40 470 C220 380, 420 560, 700 460 S1100 380, 1260 440" stroke="#2E2560" stroke-width="26" fill="none" opacity=".55"/>
+        <g stroke="#241D45" stroke-width="3" fill="none">
+          <path d="M100 620 C300 420, 520 380, 760 180 S1050 60, 1200 90"/>
+          <path d="M0 300 C260 280, 520 330, 780 300 S1080 250, 1200 270"/>
+          <path d="M340 0 C360 180, 300 360, 380 620"/>
+        </g>
+      </svg>
+      <div class="mgroup" data-city="izh">
+        <button class="marker" style="left:38%;top:32%" data-status="build"><span class="pulse"></span><span class="dot"></span><span class="mcard"><b>Метафора</b><i>Строится · сайт проекта →</i></span></button>
+        <button class="marker" style="left:53%;top:47%" data-status="build"><span class="pulse"></span><span class="dot"></span><span class="mcard"><b>Леонов</b><i>Строится · сайт проекта →</i></span></button>
+        <button class="marker" style="left:64%;top:28%" data-status="done"><span class="pulse"></span><span class="dot"></span><span class="mcard"><b>Монблан</b><i>Сдан · 2024</i></span></button>
+        <button class="marker" style="left:29%;top:55%" data-status="done"><span class="pulse"></span><span class="dot"></span><span class="mcard"><b>Матросов</b><i>Сдан · 2022</i></span></button>
+        <button class="marker" style="left:46%;top:66%" data-status="done"><span class="pulse"></span><span class="dot"></span><span class="mcard"><b>Чкалов</b><i>Сдан · 2021</i></span></button>
+        <button class="marker" style="left:60%;top:57%" data-status="done"><span class="pulse"></span><span class="dot"></span><span class="mcard"><b>Гагарин</b><i>Сдан · 2023</i></span></button>
+      </div>
+      <div class="mgroup hidden" data-city="crimea">
+        <button class="marker" style="left:26%;top:36%" data-status="build"><span class="pulse"></span><span class="dot"></span><span class="mcard"><b>СОК · Евпатория</b><i>Строится · сайт проекта →</i></span></button>
+        <button class="marker" style="left:60%;top:52%" data-status="build"><span class="pulse"></span><span class="dot"></span><span class="mcard"><b>Ласка · Алушта</b><i>Строится · сайт проекта →</i></span></button>
+        <button class="marker" style="left:52%;top:70%" data-status="build"><span class="pulse"></span><span class="dot"></span><span class="mcard"><b>Высота · Ялта</b><i>Проектируется</i></span></button>
+        <button class="marker" style="left:40%;top:56%" data-status="done"><span class="pulse"></span><span class="dot"></span><span class="mcard"><b>Ломоносов</b><i>Сдан · 2023</i></span></button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- АКЦИИ -->
+<section class="promos" id="promos">
+  <div class="container">
+    <p class="eyebrow reveal">Акции</p>
+    <h2 class="section-title display reveal">Выгодно именно сейчас</h2>
+    <div class="promos-row">
+      <a class="story reveal" href="#">
+        <div class="bgfx" style="background:radial-gradient(80% 60% at 70% 20%,rgba(87,3,172,.8),transparent)"></div>
+        <span class="ring">%</span><span class="ad">Реклама</span>
+        <h3>Скидка до 5%</h3><p>На квартиры в ЖК «Метафора» до конца месяца</p>
+      </a>
+      <a class="story reveal" href="#">
+        <img class="ph" src="img/dvor.jpg" alt="" loading="lazy"><span class="shade"></span>
+        <span class="ring">＋</span><span class="ad">Реклама</span>
+        <h3>Выбери соседа</h3><p>Приведите друга — получите бонус оба</p>
+      </a>
+      <a class="story reveal" href="#">
+        <div class="bgfx" style="background:radial-gradient(80% 60% at 70% 30%,rgba(62,111,168,.75),transparent)"></div>
+        <span class="ring">P</span><span class="ad">Реклама</span>
+        <h3>Машиноместа</h3><p>Особые условия при покупке с квартирой</p>
+      </a>
+      <a class="story reveal" href="#">
+        <img class="ph" src="img/lobby.jpg" alt="" loading="lazy"><span class="shade"></span>
+        <span class="ring">🎁</span><span class="ad">Реклама</span>
+        <h3>Подарки при покупке</h3><p>Кухня или отделка — на выбор</p>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- СПОСОБЫ ПОКУПКИ -->
+<section class="pay" id="pay">
+  <div class="container">
+    <p class="eyebrow reveal">Способы покупки</p>
+    <h2 class="section-title display">Как удобно — так и купите</h2>
+    <div class="pay-grid">
+      <div class="pc2 reveal"><div class="ic">%</div><b>Ипотека</b><p>Семейная от 6%, рыночная, IT-ипотека. Работаем с ведущими банками — заявку в банк отправим за вас.</p></div>
+      <div class="pc2 reveal"><div class="ic">⅓</div><b>Рассрочка</b><p>От застройщика, без банка и переплат — первый взнос и удобный график до конца стройки.</p></div>
+      <div class="pc2 reveal"><div class="ic">⇄</div><b>Trade-in</b><p>Зачтём вашу текущую квартиру в стоимость новой. Оценка — бесплатно, выезд в день обращения.</p></div>
+      <div class="pc2 reveal"><div class="ic">✓</div><b>Маткапитал</b><p>Принимаем материнский капитал и жилищные сертификаты — оформление берём на себя.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- КАЛЬКУЛЯТОР -->
+<section class="calc" id="calc">
+  <div class="container">
+    <p class="eyebrow reveal">Ипотека без звонка менеджеру</p>
+    <h2 class="section-title display">Посчитайте платёж<br>прямо сейчас</h2>
+    <div class="calc-card reveal">
+      <div class="calc-flat">
+        <img src="img/real-metafora.jpg" alt="Квартира в Метафоре">
+        <span class="chip-l">Метафора · строится</span>
+        <h3>2-комнатная, 54 м²</h3>
+        <p class="fprice">12 этаж · окна на закат · <b id="calcPrice">5 840 000 ₽</b></p>
+      </div>
+      <div class="calc-controls">
+        <div class="rate-chips">
+          <button class="rc active" data-rate="6">Семейная 6%</button>
+          <button class="rc" data-rate="17">Рыночная 17%</button>
+        </div>
+        <div class="row">
+          <div class="lab"><span>Первоначальный взнос</span><b id="dpVal">20% · 1 168 000 ₽</b></div>
+          <input type="range" id="dpRange" min="10" max="70" step="5" value="20" aria-label="Первоначальный взнос">
+        </div>
+        <div class="row">
+          <div class="lab"><span>Срок кредита</span><b id="yrVal">25 лет</b></div>
+          <input type="range" id="yrRange" min="5" max="30" step="1" value="25" aria-label="Срок кредита">
+        </div>
+        <div class="pay-wrap">
+          <div class="pay-cap">Платёж в месяц</div>
+          <div class="pay" id="payOut">—</div>
+        </div>
+        <p class="fine">Расчёт предварительный, не является публичной офертой. Точные условия — у банков-партнёров.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ФОРМА -->
+<section class="lead" id="lead">
+  <div class="container">
+    <div class="lead-card reveal">
+      <div>
+        <h2>Подберем квартиру<br>под ваш запрос</h2>
+        <p class="sub">Расскажите, что важно именно вам — менеджер перезвонит в течение 15 минут в рабочее время.</p>
+      </div>
+      <form class="lead-form" id="leadForm">
+        <input type="text" name="name" placeholder="Имя" autocomplete="name" required>
+        <input type="tel" name="phone" placeholder="+7 (___) ___-__-__" autocomplete="tel" required>
+        <select name="project">
+          <option value="" selected>Интересующий проект</option>
+          <option>Метафора</option><option>Леонов</option><option>Монблан</option>
+          <option>СОК</option><option>Ласка</option><option>Высота</option>
+        </select>
+        <label class="consent">
+          <input type="checkbox" id="consent" required>
+          <span>Я даю <a href="#">согласие на обработку персональных данных</a> и соглашаюсь с <a href="#">политикой конфиденциальности</a></span>
+        </label>
+        <button class="btn btn-fill" type="submit">Получить консультацию</button>
+        <div class="or-line">или напишите нам</div>
+        <div class="msgr">
+          <a href="#" aria-label="Написать в Telegram">Telegram</a>
+          <a href="#" aria-label="Написать в WhatsApp">WhatsApp</a>
+        </div>
+      </form>
+      <div class="lead-success" id="leadSuccess">
+        <div class="mgr">
+          <div class="ava">АС</div>
+          <div><b>Анна Соколова</b><span>отдел продаж «Символ»</span></div>
+        </div>
+        <ol>
+          <li>Перезвоним <b>в течение 15 минут</b> в рабочее время (пн–пт, 9:00–19:00 мск)</li>
+          <li>Уточним, что важно именно вам — и соберём подборку квартир</li>
+          <li>Пришлём её туда, куда удобно: Telegram, WhatsApp или почта</li>
+        </ol>
+        <p class="note">Никакого спама и «горящих предложений» — только ваша подборка.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ЖИЗНЬ У МОРЯ -->
+<section class="sea-life dark">
+  <div class="container">
+    <p class="eyebrow reveal">Крым · Ласка, Алушта</p>
+    <h2 class="section-title display">Здесь начинается<br>другая жизнь</h2>
+    <div class="sl-grid">
+      <div class="sl reveal"><img src="img/laska-cinema.jpg" alt="Кинотеатр под открытым небом" loading="lazy"><div class="cap"><b>Кинотеатр под звёздами</b><span>сеанс на террасе с видом на море</span></div></div>
+      <div class="sl reveal"><img src="img/laska-pool.jpg" alt="Инфинити-бассейн" loading="lazy"><div class="cap"><b>Инфинити-бассейн</b><span>с подогревом — купальный сезон круглый год</span></div></div>
+      <div class="sl reveal"><img src="img/laska-dinner.jpg" alt="Ужин на террасе" loading="lazy"><div class="cap"><b>Ужин на закате</b><span>терраса, соседи, Южный берег Крыма</span></div></div>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container">
+    <div class="cols">
+      <div><a href="#projects">Проекты</a><a href="#">Выбрать недвижимость</a><a href="#promos">Акции</a></div>
+      <div><a href="#">Способы покупки</a><a href="#">О компании</a><a href="#">Контакты</a></div>
+      <div><a href="#">Документы и проектные декларации</a><a href="#">Политика обработки персональных данных</a></div>
+      <div><a href="tel:+73412221530">+7 (3412) 221-530</a><a href="#">Ижевск · Крым</a></div>
+    </div>
+    <p class="legal">Любая информация, представленная на данном сайте, носит исключительно информационный характер и ни при каких условиях не является публичной офертой, определяемой положениями статьи 437 ГК РФ. Цены указаны справочно. Проектные декларации — на сайте наш.дом.рф. © Символ Девелопмент, 2026 · символ.рф</p>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.18/dist/lenis.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+<script>
+(function(){
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* --- прелоадер: буквы слетаются в СИМВОЛ --- */
+  const pl = document.getElementById('pageLdr');
+  function hideLdr(){ if (pl) pl.classList.add('done'); }
+  if (pl && typeof gsap !== 'undefined' && !reduced){
+    gsap.fromTo('#ldrWord span',
+      { x:()=>gsap.utils.random(-420,420), y:()=>gsap.utils.random(-260,260), rotation:()=>gsap.utils.random(-120,120), opacity:0 },
+      { x:0, y:0, rotation:0, opacity:1, duration:1, stagger:.06, ease:'expo.out', onComplete:()=>setTimeout(hideLdr, 400) });
+  } else setTimeout(hideLdr, 300);
+  setTimeout(hideLdr, 2600); /* страховка: фоновые вкладки замораживают анимации */
+
+  /* --- бургер: полноэкранное меню --- */
+  const brg = document.querySelector('.burger'), ov = document.getElementById('menuOv');
+  if (brg && ov){
+    brg.addEventListener('click', ()=>{ const open = ov.classList.toggle('open'); brg.classList.toggle('x', open); });
+    ov.querySelectorAll('a').forEach(a=>a.addEventListener('click', ()=>{ ov.classList.remove('open'); brg.classList.remove('x'); }));
+  }
+
+  /* --- умный хедер: прозрачный наверху, плотный при скролле, прячется вниз --- */
+  const header = document.getElementById('header');
+  let lastY = 0;
+  function onScroll(y){
+    header.classList.toggle('solid', y > 40);
+    if (y > 300 && y > lastY + 4) header.classList.add('hidden');
+    else if (y < lastY - 4) header.classList.remove('hidden');
+    lastY = y;
+  }
+
+  /* --- hero-видео: включаем поверх шёлка, шёлк отключаем ради GPU --- */
+  const vCity = document.getElementById('vidCity');
+  const vSea  = document.getElementById('vidSea');
+  if (vCity){
+    vCity.addEventListener('playing', () => {
+      vCity.classList.add('on');
+      const silk = document.getElementById('silk');
+      if (silk) setTimeout(() => { silk.style.display = 'none'; }, 1400);
+    }, { once: true });
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) return;
+      const active = document.body.classList.contains('sea') ? vSea : vCity;
+      if (active.paused) active.play().catch(()=>{});
+    });
+  }
+
+  /* --- переключатель миров: город (Леонов) ⇄ море (Ласка) --- */
+  const bCity = document.getElementById('wCity'), bSea = document.getElementById('wSea');
+  const hTitle = document.getElementById('heroTitle'), hEye = document.getElementById('heroEyebrow');
+  const WORLDS = {
+    city: { eye:'Строим то, что ценно · Ижевск',
+            title:'Создаем пространства,<br>в которых хочется жить,<br><em>мечтать и расти</em>' },
+    sea:  { eye:'Строим то, что ценно · Крым',
+            title:'Море, к которому<br>возвращаются<br><em>каждое лето</em>' }
+  };
+  function setWorld(sea){
+    document.body.classList.toggle('sea', sea);
+    bCity.classList.toggle('on', !sea); bSea.classList.toggle('on', sea);
+    vCity.classList.toggle('on', !sea); vSea.classList.toggle('on', sea);
+    if (sea){ vSea.play().catch(()=>{}); vCity.pause(); }
+    else { vCity.play().catch(()=>{}); vSea.pause(); }
+    const t = sea ? WORLDS.sea : WORLDS.city;
+    [hTitle, hEye].forEach(el => { el.style.transition = 'opacity .45s'; el.style.opacity = 0; });
+    setTimeout(() => {
+      hTitle.innerHTML = t.title; hEye.textContent = t.eye;
+      hTitle.style.opacity = 1; hEye.style.opacity = 1;
+    }, 450);
+  }
+  if (bCity && bSea){
+    bCity.addEventListener('click', () => setWorld(false));
+    bSea.addEventListener('click', () => setWorld(true));
+  }
+
+  /* --- веер проектов: раскладка по дуге --- */
+  const fanStage = document.getElementById('fanStage');
+  const fanCards = fanStage ? Array.from(fanStage.querySelectorAll('.fan-card')) : [];
+  let fanScrub = 6, fanUser = 0;   /* скролл-вращение + ручное вращение (складываются) */
+  function fanApply(){
+    if (!fanStage || !fanCards.length) return;
+    const w = fanStage.clientWidth || 1, h = fanStage.clientHeight || 1;
+    const mob = w < 768;
+    const R = Math.min(w, h*1.5) * (mob ? 1.35 : 1.05);
+    const cy = h*(mob ? .30 : .22) + R;
+    const spread = mob ? 95 : 125;
+    const start = -90 - spread/2, step = spread/(fanCards.length-1);
+    const rot = fanScrub + fanUser;
+    fanCards.forEach((c,i)=>{
+      const a = start + i*step + rot, r = a*Math.PI/180;
+      c.style.transform = `translate(${Math.cos(r)*R}px, ${Math.sin(r)*R + cy}px) rotate(${a+90}deg)`;
+    });
+  }
+  function fanArrange(rot){ fanScrub = rot; fanApply(); }
+  fanApply();
+  addEventListener('resize', fanApply);
+  addEventListener('load', fanApply);
+  /* если стейдж ещё не имеет размеров (скрытая вкладка) — дожидаемся */
+  (function fanEnsure(tries){
+    if ((fanStage ? fanStage.clientWidth : 0) < 50 && tries < 60) requestAnimationFrame(()=>fanEnsure(tries+1));
+    else fanApply();
+  })(0);
+  /* ручное управление веером: перетаскивание + стрелки */
+  if (fanStage){
+    fanStage.querySelectorAll('img').forEach(i=>{ i.draggable = false; });
+    const clampUser = v => Math.max(-80, Math.min(80, v));
+    let dragX = null;
+    fanStage.addEventListener('pointerdown', e=>{ dragX = e.clientX; });
+    addEventListener('pointermove', e=>{
+      if (dragX === null) return;
+      fanUser = clampUser(fanUser + (e.clientX - dragX) * .07);
+      dragX = e.clientX;
+      fanApply();
+    });
+    addEventListener('pointerup', ()=>{ dragX = null; });
+    const stepBy = dir => {
+      const mob = fanStage.clientWidth < 768;
+      const step = (mob ? 95 : 125) / Math.max(1, fanCards.length - 1);
+      fanUser = clampUser(fanUser + dir * step);
+      fanApply();
+    };
+    const prev = document.getElementById('fanPrev'), next = document.getElementById('fanNext');
+    if (prev) prev.addEventListener('click', ()=>stepBy(1));
+    if (next) next.addEventListener('click', ()=>stepBy(-1));
+  }
+
+  /* --- Lenis + GSAP --- */
+  const hasLibs = typeof Lenis !== 'undefined' && typeof gsap !== 'undefined';
+  if (hasLibs && !reduced){
+    gsap.registerPlugin(ScrollTrigger);
+    const lenis = new Lenis({ lerp: .1 });
+    lenis.on('scroll', (e)=>{ ScrollTrigger.update(); onScroll(e.scroll); });
+    gsap.ticker.add((t)=>lenis.raf(t*1000));
+    gsap.ticker.lagSmoothing(0);
+
+    /* параллакс фона hero */
+    gsap.to('#heroBg', { yPercent: 18, ease:'none',
+      scrollTrigger:{ trigger:'.hero', start:'top top', end:'bottom top', scrub:true } });
+
+    /* заголовки: построчное проявление (Text Reveal) */
+    document.querySelectorAll('.section-title').forEach(t=>{
+      t.classList.remove('reveal');
+      t.style.opacity = 1; t.style.transform = 'none';
+      const lines = t.innerHTML.split(/<br\s*\/?>/i);
+      t.innerHTML = lines.map(l=>'<span class="tr-line"><span class="tr-in">'+l+'</span></span>').join('');
+      gsap.to(t.querySelectorAll('.tr-in'), { y:0, duration:1, stagger:.12, ease:'power3.out',
+        scrollTrigger:{ trigger:t, start:'top 86%' } });
+    });
+
+    /* веер: появление и вращение по скроллу */
+    if (fanStage){
+      gsap.to(fanCards, { opacity:1, duration:.9, stagger:.06, ease:'power2.out',
+        scrollTrigger:{ trigger:fanStage, start:'top 82%' } });
+      const fanProxy = { r:6 };
+      gsap.to(fanProxy, { r:-24, ease:'none',
+        scrollTrigger:{ trigger:fanStage, start:'top 85%', end:'bottom 15%', scrub:1 },
+        onUpdate:()=>fanArrange(fanProxy.r) });
+    }
+
+    /* sticky-сцена «Рендер → Реальность»: блок прилипает, ползунок проезжает сам (десктоп) */
+    gsap.matchMedia().add('(min-width: 901px)', () => {
+      ScrollTrigger.create({
+        trigger: '.compare-section', start: 'center center', end: '+=90%', pin: true, scrub: 1,
+        /* рендер → реальность: ползунок едет справа налево, открывая построенное */
+        onUpdate: self => { if (window.__cmpApply && !window.__cmpDragging) window.__cmpApply(92 - self.progress * 84); }
+      });
+    });
+
+    /* reveal-анимации */
+    gsap.utils.toArray('.reveal').forEach(el=>{
+      gsap.to(el, { opacity:1, y:0, duration:1, ease:'power3.out',
+        scrollTrigger:{ trigger:el, start:'top 86%' } });
+    });
+
+    /* счётчики */
+    document.querySelectorAll('[data-count]').forEach(el=>{
+      const target = +el.dataset.count;
+      gsap.fromTo(el, {innerText:0}, { innerText:target, duration:1.6, ease:'power2.out', snap:{innerText:1},
+        scrollTrigger:{ trigger:el, start:'top 85%' } });
+    });
+  } else {
+    /* фолбэк без библиотек: всё видно, хедер на обычном скролле */
+    document.querySelectorAll('.reveal').forEach(el=>{ el.style.opacity=1; el.style.transform='none'; });
+    document.querySelectorAll('[data-count]').forEach(el=>{ el.innerText = el.dataset.count; });
+    addEventListener('scroll', ()=>onScroll(scrollY), {passive:true});
+    fanCards.forEach(c=>{ c.style.opacity = 1; });
+  }
+
+  /* --- слайдер рендер/реальность --- */
+  const cmp = document.getElementById('compare');
+  if (cmp){
+    const after = cmp.querySelector('.after-layer');
+    const divider = document.getElementById('cmpDivider');
+    const handle = document.getElementById('cmpHandle');
+    function applyP(p){
+      p = Math.max(4, Math.min(96, p));
+      after.style.clipPath = `inset(0 0 0 ${p}%)`;
+      divider.style.left = p + '%';
+      handle.style.left = p + '%';
+    }
+    function setPos(clientX){
+      const r = cmp.getBoundingClientRect();
+      if (r.width) applyP((clientX - r.left) / r.width * 100);
+    }
+    window.__cmpApply = applyP;
+    let dragging = false;
+    cmp.addEventListener('pointerdown', e=>{ dragging = true; window.__cmpDragging = true; setPos(e.clientX); try{ cmp.setPointerCapture(e.pointerId); }catch(_){} });
+    cmp.addEventListener('pointermove', e=>{ if (dragging) setPos(e.clientX); });
+    cmp.addEventListener('pointerup',   ()=>{ dragging = false; window.__cmpDragging = false; });
+    cmp.addEventListener('pointercancel',()=>{ dragging = false; window.__cmpDragging = false; });
+  }
+
+  /* --- форма: кнопка активна только при валидных полях + маска телефона --- */
+  const form = document.getElementById('leadForm');
+  if (form){
+    const name = form.querySelector('[name=name]');
+    const phone = form.querySelector('[name=phone]');
+    const consent = form.querySelector('#consent');
+    phone.addEventListener('input', ()=>{
+      let d = phone.value.replace(/\D/g,'').replace(/^[78]/,'').slice(0,10);
+      let out = '+7';
+      if (d.length) out += ' (' + d.slice(0,3);
+      if (d.length >= 4) out += ') ' + d.slice(3,6);
+      if (d.length >= 7) out += '-' + d.slice(6,8);
+      if (d.length >= 9) out += '-' + d.slice(8,10);
+      phone.value = out;
+    });
+    function validate(){
+      const ok = name.value.trim().length >= 2 &&
+                 phone.value.replace(/\D/g,'').length === 11 &&
+                 consent.checked;
+      form.classList.toggle('valid', ok);
+    }
+    form.addEventListener('input', validate);
+    form.addEventListener('submit', e=>{
+      e.preventDefault();
+      form.style.display = 'none';
+      const ok = document.getElementById('leadSuccess');
+      if (ok) ok.style.display = 'flex';
+    });
+  }
+
+  /* --- ипотечный калькулятор --- */
+  const dpR = document.getElementById('dpRange');
+  if (dpR){
+    const PRICE = 5840000;
+    const yrR = document.getElementById('yrRange');
+    const dpV = document.getElementById('dpVal'), yrV = document.getElementById('yrVal'), out = document.getElementById('payOut');
+    const fmt = v => Math.round(v).toLocaleString('ru-RU') + ' ₽';
+    let rate = 6;
+    function recalc(){
+      const dpPct = +dpR.value, years = +yrR.value;
+      const dp = PRICE * dpPct / 100, loan = PRICE - dp;
+      const r = rate / 100 / 12, n = years * 12;
+      const pay = loan * r * Math.pow(1 + r, n) / (Math.pow(1 + r, n) - 1);
+      dpV.textContent = dpPct + '% · ' + fmt(dp);
+      yrV.textContent = years + ' ' + (years % 10 === 1 && years !== 11 ? 'год' : (years % 10 >= 2 && years % 10 <= 4 && (years < 10 || years > 20) ? 'года' : 'лет'));
+      out.textContent = fmt(pay) + ' / мес';
+    }
+    dpR.addEventListener('input', recalc);
+    yrR.addEventListener('input', recalc);
+    document.querySelectorAll('.rc').forEach(b=>b.addEventListener('click', ()=>{
+      document.querySelectorAll('.rc').forEach(x=>x.classList.toggle('active', x===b));
+      rate = +b.dataset.rate;
+      recalc();
+    }));
+    recalc();
+  }
+
+  /* --- карта: города и фильтры --- */
+  const mapPanel = document.getElementById('mapPanel');
+  if (mapPanel){
+    const groups = mapPanel.querySelectorAll('.mgroup');
+    document.querySelectorAll('.mchip').forEach(b=>b.addEventListener('click', ()=>{
+      document.querySelectorAll('.mchip').forEach(x=>x.classList.toggle('active', x===b));
+      groups.forEach(g=>g.classList.toggle('hidden', g.dataset.city !== b.dataset.city));
+    }));
+    document.querySelectorAll('.fchip').forEach(b=>b.addEventListener('click', ()=>{
+      document.querySelectorAll('.fchip').forEach(x=>x.classList.toggle('active', x===b));
+      const f = b.dataset.f;
+      mapPanel.querySelectorAll('.marker').forEach(m=>m.classList.toggle('dim', f !== 'all' && m.dataset.status !== f));
+    }));
+  }
+
+  /* --- spotlight на карточках проектов --- */
+  document.querySelectorAll('.pcard').forEach(c=>{
+    c.addEventListener('pointermove', e=>{
+      const r = c.getBoundingClientRect();
+      c.style.setProperty('--mx', (e.clientX - r.left) + 'px');
+      c.style.setProperty('--my', (e.clientY - r.top) + 'px');
+    });
+  });
+})();
+</script>
+
+<!-- WebGL-шёлк в hero: фирменные фиолетовые ленты; при любой ошибке остаётся CSS-фолбэк -->
+<script type="importmap">
+{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js"}}
+</script>
+<script type="module">
+import * as THREE from 'three';
+const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const canvas = document.getElementById('silk');
+if (canvas && !reduced) {
+  try {
+    const renderer = new THREE.WebGLRenderer({canvas, antialias:false, powerPreference:'high-performance'});
+    const DPR = Math.min(window.devicePixelRatio || 1, 1.75);
+    const scene = new THREE.Scene();
+    const cam = new THREE.OrthographicCamera(-1,1,1,-1,0,1);
+    const uniforms = { uTime:{value:0}, uRes:{value:new THREE.Vector2(1,1)} };
+    const mat = new THREE.ShaderMaterial({
+      uniforms,
+      vertexShader:'void main(){gl_Position=vec4(position,1.0);}',
+      fragmentShader:`
+        precision highp float;
+        uniform float uTime; uniform vec2 uRes;
+        float hash(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}
+        float noise(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.0-2.0*f);
+          return mix(mix(hash(i),hash(i+vec2(1.,0.)),f.x),mix(hash(i+vec2(0.,1.)),hash(i+vec2(1.,1.)),f.x),f.y);}
+        float fbm(vec2 p){float v=0.,a=.5;for(int i=0;i<5;i++){v+=a*noise(p);p*=2.03;a*=.5;}return v;}
+        void main(){
+          vec2 uv=gl_FragCoord.xy/uRes;
+          vec2 p=vec2(uv.x*1.4,uv.y*.9);
+          float t=uTime*.05;
+          float warp=fbm(p*1.8+vec2(0.,t*2.));
+          float silk=fbm(vec2(p.x*1.2+warp*1.4,p.y*2.2-t*3.+warp));
+          float ribbon=smoothstep(.35,.95,silk);
+          vec3 deep=vec3(.039,.004,.251);
+          vec3 vio=vec3(.341,.012,.675);
+          vec3 lil=vec3(.659,.475,.910);
+          vec3 glow=vec3(.851,.800,.961);
+          vec3 col=deep;
+          col=mix(col,vio,ribbon);
+          col=mix(col,lil,smoothstep(.55,1.,silk)*.8);
+          col+=glow*pow(max(silk-.7,0.)*4.,2.)*.4;
+          float vig=smoothstep(1.25,.35,distance(uv,vec2(.5,.55)));
+          col*=mix(.55,1.,vig);
+          col*=mix(1.,.55,smoothstep(.45,0.,uv.y)); /* затемнение низа под текст */
+          gl_FragColor=vec4(col,1.);
+        }`
+    });
+    scene.add(new THREE.Mesh(new THREE.PlaneGeometry(2,2), mat));
+    function resize(){
+      const w = canvas.clientWidth || 1, h = canvas.clientHeight || 1;
+      renderer.setPixelRatio(DPR);
+      renderer.setSize(w, h, false);
+      uniforms.uRes.value.set(w*DPR, h*DPR);
+    }
+    addEventListener('resize', resize); resize();
+    let visible = true;
+    new IntersectionObserver(e => { visible = e[0].isIntersecting; }).observe(canvas);
+    const clock = new THREE.Clock();
+    renderer.setAnimationLoop(() => {
+      if (!visible || document.hidden) return;
+      uniforms.uTime.value = clock.getElapsedTime();
+      renderer.render(scene, cam);
+    });
+    canvas.classList.add('on');
+    window.__silkOK = true;
+  } catch (err) {
+    console.warn('WebGL hero: используется CSS-фолбэк.', err);
+    window.__silkOK = false;
+  }
+}
+</script>
+</body>
+</html>

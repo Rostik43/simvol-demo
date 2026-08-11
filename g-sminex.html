@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Символ · Версия «Дышит» (по мотивам Sminex)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  @font-face{font-family:'Bounded';src:url('fonts/Bounded-Regular.ttf') format('truetype');font-weight:400;font-display:swap}
+  @font-face{font-family:'Bounded';src:url('fonts/Bounded-ExtraLight.ttf') format('truetype');font-weight:200;font-display:swap}
+  :root{
+    --bg:#F5F4F1;         /* тёплый свет — воздух */
+    --panel:#FFFFFF;
+    --ink:#17122E;        /* тёмно-фиолетовый почти чёрный */
+    --sub:#8A8694;
+    --royal:#5703AC;      /* фиолетовый — только штрихами */
+    --line:rgba(23,18,46,.14);
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:auto}
+  body{font-family:'Jost',sans-serif;font-weight:300;background:var(--bg);color:var(--ink);overflow-x:hidden}
+  .d{font-family:'Bounded',sans-serif;font-weight:200;text-transform:uppercase}
+  .wrap{max-width:1240px;margin:0 auto;padding:0 4vw}
+  .reveal{opacity:0;transform:translateY(24px)}
+
+  .demo-nav{position:fixed;bottom:1rem;left:1rem;z-index:200;display:flex;gap:.4rem;font-size:.68rem}
+  .demo-nav a{color:var(--ink);background:rgba(255,255,255,.8);border:1px solid var(--line);border-radius:999px;padding:.4rem .8rem;text-decoration:none;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+  .demo-nav a.cur{background:var(--royal);border-color:var(--royal);color:#fff}
+
+  /* ---------- ХЕДЕР ---------- */
+  .hd{position:fixed;inset:0 0 auto 0;z-index:100;display:flex;align-items:center;gap:2.5rem;padding:1.5rem 4vw;background:rgba(245,244,241,.85);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);border-bottom:1px solid transparent;transition:transform .45s,border-color .35s}
+  .hd.line{border-color:var(--line)}
+  .hd.hide{transform:translateY(-100%)}
+  .hd img{height:34px;display:block}
+  .hd nav{display:flex;gap:2rem;margin-left:auto}
+  .hd a{font-size:.85rem;font-weight:400;color:var(--ink);text-decoration:none;letter-spacing:.02em}
+  .hd a:hover{color:var(--royal)}
+  .hd .tel{font-weight:500}
+  @media(max-width:900px){.hd nav{gap:1.1rem}.hd a:not(.tel){display:none}}
+
+  /* ---------- HERO: воздух ---------- */
+  .hero{padding:11rem 4vw 0;max-width:1240px;margin:0 auto}
+  .hero .eyebrow{font-size:.72rem;letter-spacing:.5em;text-transform:uppercase;color:var(--sub);margin-bottom:2.6rem}
+  .hero h1{font-family:'Bounded',sans-serif;font-weight:200;text-transform:uppercase;font-size:clamp(1.9rem,4.6vw,4rem);line-height:1.38;letter-spacing:.01em;max-width:20ch}
+  .hero h1 i{font-style:normal;color:var(--royal)}
+  .hero .sub{margin-top:2.8rem;font-size:1.02rem;line-height:1.85;color:var(--sub);max-width:42ch}
+  .btn-line{display:inline-block;margin-top:3rem;font-size:.8rem;font-weight:400;letter-spacing:.22em;text-transform:uppercase;color:var(--ink);border:1px solid var(--ink);border-radius:0;padding:1.15rem 2.6rem;text-decoration:none;transition:all .35s}
+  .btn-line:hover{background:var(--ink);color:#fff}
+
+  /* видео в рамке с полями — не фуллскрин */
+  .film{max-width:1240px;margin:6.5rem auto 0;padding:0 4vw}
+  .film video{width:100%;display:block;filter:saturate(.92)}
+  .film .cap{display:flex;justify-content:space-between;gap:1rem;margin-top:1rem;font-size:.75rem;color:var(--sub);letter-spacing:.06em}
+
+  /* ---------- ПРОЕКТЫ СПИСКОМ ---------- */
+  .list{padding:9rem 0 7rem}
+  .list .head{display:flex;align-items:baseline;justify-content:space-between;gap:1rem;margin-bottom:3.5rem}
+  .list h2{font-size:clamp(1.2rem,2.2vw,1.8rem);line-height:1.4}
+  .list .head span{font-size:.75rem;color:var(--sub);letter-spacing:.1em}
+  .prow{display:grid;grid-template-columns:3.2rem 1fr auto auto;gap:1.5rem;align-items:baseline;padding:2rem 0;border-top:1px solid var(--line);text-decoration:none;color:var(--ink);transition:padding .35s}
+  .prow:last-child{border-bottom:1px solid var(--line)}
+  .prow .n{font-size:.75rem;color:var(--sub)}
+  .prow .nm{font-family:'Bounded',sans-serif;font-weight:200;text-transform:uppercase;font-size:clamp(1.2rem,2.6vw,2rem);letter-spacing:.02em;transition:color .3s}
+  .prow .geo{font-size:.85rem;color:var(--sub)}
+  .prow .pr{font-size:.9rem;font-weight:400;white-space:nowrap}
+  .prow:hover .nm{color:var(--royal)}
+  .prow:hover{padding-left:.8rem}
+  @media(max-width:900px){.prow{grid-template-columns:2rem 1fr;grid-template-rows:auto auto}.prow .geo{grid-column:2}.prow .pr{grid-column:2}}
+  /* всплывающее фото за курсором */
+  .float-img{position:fixed;z-index:60;width:300px;aspect-ratio:3/2;pointer-events:none;opacity:0;transform:scale(.94);transition:opacity .35s,transform .35s;overflow:hidden;box-shadow:0 24px 70px rgba(23,18,46,.25)}
+  .float-img img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .25s}
+  .float-img.on{opacity:1;transform:scale(1)}
+  .float-img img.cur{opacity:1}
+  @media (pointer:coarse){.float-img{display:none}}
+
+  /* ---------- МАНИФЕСТ ---------- */
+  .manif{padding:10rem 4vw;text-align:center}
+  .manif .mark{width:46px;margin:0 auto 3rem;display:block;opacity:.9}
+  .manif p{font-family:'Bounded',sans-serif;font-weight:200;text-transform:uppercase;font-size:clamp(1.05rem,2.4vw,1.9rem);line-height:1.75;max-width:34ch;margin:0 auto}
+  .manif p i{font-style:normal;color:var(--royal)}
+  .manif .src{margin-top:2.6rem;font-size:.72rem;letter-spacing:.4em;text-transform:uppercase;color:var(--sub)}
+
+  /* ---------- РАЗВОРОТ ---------- */
+  .spread{padding:0 4vw;max-width:1240px;margin:0 auto}
+  .spread img{width:100%;display:block}
+  .spread .cap{display:flex;justify-content:space-between;margin-top:1rem;font-size:.75rem;color:var(--sub);letter-spacing:.06em}
+
+  /* ---------- ЦИФРЫ В ЛИНИЮ ---------- */
+  .nums{max-width:1240px;margin:0 auto;padding:8rem 4vw}
+  .nums .grid{display:grid;grid-template-columns:repeat(4,1fr)}
+  .nums .cell{padding:2.4rem 1.6rem;border-left:1px solid var(--line)}
+  .nums .cell:first-child{border-left:none}
+  .nums b{font-family:'Bounded',sans-serif;font-weight:200;font-size:clamp(1.8rem,3.6vw,3rem);display:block}
+  .nums span{display:block;margin-top:.9rem;font-size:.82rem;color:var(--sub);line-height:1.5}
+  @media(max-width:900px){.nums .grid{grid-template-columns:1fr 1fr}.nums .cell:nth-child(3){border-left:none}}
+
+  /* ---------- ФОРМА ---------- */
+  .contact{background:var(--panel);padding:8rem 4vw 9rem}
+  .contact .in{max-width:1240px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:5rem}
+  .contact h2{font-size:clamp(1.3rem,2.4vw,2rem);line-height:1.45}
+  .contact .note{margin-top:1.8rem;font-size:.9rem;line-height:1.8;color:var(--sub);max-width:38ch}
+  .f{display:flex;flex-direction:column;gap:2.2rem}
+  .f input{font-family:inherit;font-weight:300;font-size:1rem;color:var(--ink);background:transparent;border:none;border-bottom:1px solid var(--line);padding:.7rem 0;outline:none;transition:border-color .3s}
+  .f input:focus{border-color:var(--royal)}
+  .f input::placeholder{color:var(--sub)}
+  .f .agree{font-size:.72rem;color:var(--sub);line-height:1.6}
+  .f .agree a{color:var(--royal)}
+  .f .btn-line{margin-top:0;align-self:flex-start}
+  @media(max-width:900px){.contact .in{grid-template-columns:1fr;gap:2.5rem}}
+
+  .ft{padding:2.4rem 4vw 5rem;font-size:.72rem;color:var(--sub);line-height:1.7;max-width:1240px;margin:0 auto}
+
+  @media (prefers-reduced-motion:reduce){.reveal{opacity:1!important;transform:none!important}}
+</style>
+</head>
+<body>
+
+<nav class="demo-nav">
+  <a href="index.html">← превью</a>
+  <a href="e-prodazha.html">Продажа</a>
+  <a class="cur" href="g-sminex.html">Дышит</a>
+  <a href="f-kino.html">Кино</a>
+</nav>
+
+<header class="hd" id="hd">
+  <img src="img/brand/logo-h-dark.png" alt="Символ Девелопмент">
+  <nav>
+    <a href="#projects">Проекты</a>
+    <a href="#contact">Коротко о нас</a>
+    <a class="tel" href="tel:+73412221530">+7 (3412) 221-530</a>
+  </nav>
+</header>
+
+<section class="hero">
+  <p class="eyebrow reveal">Девелопмент новых возможностей</p>
+  <h1 class="reveal">Строим то,<br>что <i>ценно</i></h1>
+  <p class="sub reveal">Кварталы у Ижевского пруда и белые террасы над Чёрным морем. Девять адресов, один почерк: строим как для себя.</p>
+  <a class="btn-line reveal" href="#projects">Выбрать недвижимость</a>
+</section>
+
+<div class="film reveal">
+  <video src="img/hero-drone.mp4" poster="img/hero-poster.jpg" autoplay muted loop playsinline></video>
+  <div class="cap"><span>Леонов · квартал героев · съёмка августа 2026</span><span>Ижевск</span></div>
+</div>
+
+<section class="list" id="projects">
+  <div class="wrap">
+    <div class="head reveal">
+      <h2 class="d">Проекты</h2>
+      <span>наведите на строку</span>
+    </div>
+    <div id="rows">
+      <a class="prow reveal" href="#" data-img="img/real-metafora.jpg"><span class="n">01</span><span class="nm">Метафора</span><span class="geo">Ижевск · строится</span><span class="pr">от 5,2 млн ₽</span></a>
+      <a class="prow reveal" href="#" data-img="img/real-leonov.jpg"><span class="n">02</span><span class="nm">Леонов</span><span class="geo">Ижевск · строится</span><span class="pr">от 4,8 млн ₽</span></a>
+      <a class="prow reveal" href="#" data-img="img/real-monblan.jpg"><span class="n">03</span><span class="nm">Монблан</span><span class="geo">Ижевск · сдан</span><span class="pr">от 7,1 млн ₽</span></a>
+      <a class="prow reveal" href="#" data-img="img/real-sok.jpg"><span class="n">04</span><span class="nm">СОК</span><span class="geo">Евпатория · строится</span><span class="pr">от 6,1 млн ₽</span></a>
+      <a class="prow reveal" href="#" data-img="img/laska.jpg"><span class="n">05</span><span class="nm">Ласка</span><span class="geo">Алушта · строится</span><span class="pr">от 8,1 млн ₽</span></a>
+      <a class="prow reveal" href="#" data-img="img/vysota.jpg"><span class="n">06</span><span class="nm">Высота</span><span class="geo">Ялта · проектируется</span><span class="pr">по запросу</span></a>
+    </div>
+  </div>
+</section>
+
+<div class="float-img" id="floatImg" aria-hidden="true"></div>
+
+<section class="manif">
+  <img class="mark" src="img/brand/znak-violet.png" alt="">
+  <p class="reveal">Дать людям возможность увидеть и ощутить <i>совершенно новое качество жизни</i>, которое казалось недостижимым</p>
+  <div class="src reveal">Миссия компании</div>
+</section>
+
+<div class="spread reveal">
+  <img src="img/real-metafora.jpg" alt="Метафора, вечерний двор" loading="lazy">
+  <div class="cap"><span>Метафора · двор на стилобате</span><span>рендер проекта</span></div>
+</div>
+
+<section class="nums">
+  <div class="grid">
+    <div class="cell reveal"><b data-cnt="10">0</b><span>домов сдано в срок</span></div>
+    <div class="cell reveal"><b data-cnt="9">0</b><span>проектов в двух регионах</span></div>
+    <div class="cell reveal"><b data-cnt="5">0</b><span>минут до воды из каждого квартала</span></div>
+    <div class="cell reveal"><b>0</b><span>переносов сроков за всю историю</span></div>
+  </div>
+</section>
+
+<section class="contact" id="contact">
+  <div class="in">
+    <div class="reveal">
+      <h2 class="d">Расскажите, что ищете</h2>
+      <p class="note">Перезвоним в течение 15 минут в рабочее время. Подборка — туда, куда удобно: телефон, Telegram или почта.</p>
+    </div>
+    <form class="f reveal" onsubmit="event.preventDefault(); alert('Прототип: заявка ушла бы в CRM.');">
+      <input type="text" placeholder="Имя" autocomplete="name">
+      <input type="tel" placeholder="+7 (___) ___-__-__" autocomplete="tel">
+      <p class="agree">Нажимая кнопку, вы даёте <a href="#">согласие на обработку персональных данных</a>.</p>
+      <button class="btn-line" type="submit">Отправить</button>
+    </form>
+  </div>
+</section>
+
+<footer class="ft">
+  Информация носит демонстрационный характер (прототип) и не является публичной офертой (ст. 437 ГК РФ). © Символ Девелопмент, 2026 · символ.рф
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.18/dist/lenis.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+<script>
+(function(){
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* хедер: тонкая линия при скролле, прячется вниз */
+  const hd = document.getElementById('hd');
+  let lastY = 0;
+  function onScroll(y){
+    hd.classList.toggle('line', y > 30);
+    if (y > 400 && y > lastY + 4) hd.classList.add('hide');
+    else if (y < lastY - 4) hd.classList.remove('hide');
+    lastY = y;
+  }
+
+  /* всплывающее фото у списка проектов */
+  const fi = document.getElementById('floatImg');
+  const rows = [...document.querySelectorAll('.prow')];
+  const imgs = {};
+  rows.forEach(r => {
+    const src = r.dataset.img;
+    const im = document.createElement('img');
+    im.src = src; imgs[src] = im; fi.appendChild(im);
+    r.addEventListener('pointerenter', () => {
+      Object.values(imgs).forEach(i => i.classList.remove('cur'));
+      im.classList.add('cur'); fi.classList.add('on');
+    });
+    r.addEventListener('pointerleave', () => fi.classList.remove('on'));
+  });
+  addEventListener('pointermove', e => {
+    fi.style.left = Math.min(innerWidth - 320, e.clientX + 28) + 'px';
+    fi.style.top = (e.clientY - 100) + 'px';
+  });
+
+  const hasLibs = typeof gsap !== 'undefined' && typeof Lenis !== 'undefined';
+  if (hasLibs && !reduced){
+    gsap.registerPlugin(ScrollTrigger);
+    const lenis = new Lenis({ lerp: .09 });
+    lenis.on('scroll', e => { ScrollTrigger.update(); onScroll(e.scroll); });
+    gsap.ticker.add(t => lenis.raf(t * 1000));
+    gsap.ticker.lagSmoothing(0);
+
+    gsap.utils.toArray('.reveal').forEach(el => {
+      gsap.to(el, { opacity: 1, y: 0, duration: 1.1, ease: 'power2.out',
+        scrollTrigger: { trigger: el, start: 'top 90%' } });
+    });
+    document.querySelectorAll('[data-cnt]').forEach(el => {
+      gsap.fromTo(el, { innerText: 0 }, { innerText: +el.dataset.cnt, duration: 1.6, snap: { innerText: 1 }, ease: 'power2.out',
+        scrollTrigger: { trigger: el, start: 'top 90%' } });
+    });
+  } else {
+    document.querySelectorAll('.reveal').forEach(el => { el.style.opacity = 1; el.style.transform = 'none'; });
+    document.querySelectorAll('[data-cnt]').forEach(el => { el.innerText = el.dataset.cnt; });
+    addEventListener('scroll', () => onScroll(scrollY), { passive: true });
+  }
+})();
+</script>
+</body>
+</html>

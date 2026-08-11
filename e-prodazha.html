@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Символ · Продающий визуал (по канонам IDA)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geologica:wght@300;400;500;600&family=Onest:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --sand:#F4EFE6;      /* тёплый песок — 70% света по ТЗ */
+    --sand-2:#EDE6D8;
+    --ink:#1C2430;       /* тёплый почти-чёрный */
+    --sea:#0E2A38;       /* глубокая вода — тёмные секции */
+    --tur:#2E8C96;       /* бирюза — действия */
+    --tur-h:#247280;
+    --violet:#6C57C9;    /* бренд — точечно */
+    --grey:#757E88;
+    --line:rgba(28,36,48,.12);
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:'Onest',sans-serif;background:var(--sand);color:var(--ink);overflow-x:hidden}
+  /* зерно поверх всей страницы — плёночная фактура */
+  .grain{position:fixed;inset:0;z-index:60;pointer-events:none;opacity:.04;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E")}
+  .d{font-family:'Geologica',sans-serif;font-weight:400;letter-spacing:-.02em}
+  .container{max-width:1280px;margin:0 auto;padding:0 2rem}
+  .reveal{opacity:0;transform:translateY(26px)}
+
+  .back{position:fixed;bottom:1rem;left:1rem;z-index:100;font-size:.68rem}
+  .back a{color:var(--ink);background:rgba(255,255,255,.8);border:1px solid var(--line);border-radius:999px;padding:.4rem .9rem;text-decoration:none;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+
+  /* ---------- ХЕДЕР ---------- */
+  .hd{position:sticky;top:0;z-index:90;display:flex;align-items:center;gap:2rem;padding:1rem 2rem;background:rgba(244,239,230,.88);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+  .logo{font-family:'Geologica',sans-serif;font-weight:600;font-size:1.05rem;letter-spacing:.22em;text-transform:uppercase;text-decoration:none;color:var(--ink)}
+  .logo span{color:var(--violet)}
+  .hd nav{display:flex;gap:1.5rem;margin-left:auto}
+  .hd nav a{font-size:.8rem;font-weight:500;color:var(--ink);opacity:.75;text-decoration:none}
+  .hd nav a:hover{opacity:1}
+  .hd .tel{font-weight:700;font-size:.85rem;color:var(--ink);text-decoration:none;white-space:nowrap}
+  .btn{display:inline-block;font-size:.83rem;font-weight:600;border-radius:999px;padding:.85rem 1.7rem;cursor:pointer;text-decoration:none;border:none;transition:background .25s,transform .25s,color .25s}
+  .btn-sea{background:var(--tur);color:#fff}
+  .btn-sea:hover{background:var(--tur-h);transform:translateY(-1px)}
+  .btn-line{background:transparent;color:var(--ink);border:1px solid rgba(28,36,48,.3)}
+  .btn-line:hover{border-color:var(--ink)}
+  /* кнопка-в-кнопке со стрелкой */
+  .btn-nest{display:inline-flex;align-items:center;gap:.8rem;padding:.5rem .5rem .5rem 1.6rem}
+  .btn-ico{width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.22);display:grid;place-items:center;font-size:.95rem;transition:transform .6s cubic-bezier(.32,.72,0,1)}
+  .btn-nest:hover .btn-ico{transform:translate(2px,-2px) scale(1.08)}
+  .btn:active{transform:scale(.97)}
+  .hd .btn{padding:.7rem 1.3rem}
+  @media(max-width:900px){.hd nav{display:none}}
+
+  /* ---------- HERO ---------- */
+  .hero{padding:4.5rem 0 0;position:relative}
+  /* живые пятна света за текстом */
+  .blob{position:absolute;border-radius:50%;filter:blur(90px);pointer-events:none;z-index:-1}
+  .blob.b1{width:520px;height:520px;top:-10%;right:6%;background:rgba(46,140,150,.20);animation:bfloat 18s ease-in-out infinite alternate}
+  .blob.b2{width:420px;height:420px;top:24%;left:-6%;background:rgba(108,87,201,.14);animation:bfloat 22s ease-in-out infinite alternate-reverse}
+  @keyframes bfloat{from{transform:translate(0,0) scale(1)}to{transform:translate(-6%,8%) scale(1.15)}}
+  /* шиммер на акценте заголовка */
+  .hero h1 em{background:linear-gradient(100deg,var(--tur) 30%,#7FD1CB 50%,var(--tur) 70%);background-size:200% 100%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:shimmer 5s ease-in-out infinite}
+  @keyframes shimmer{0%,100%{background-position:100% 0}50%{background-position:0 0}}
+  /* построчный выезд h1 */
+  .tr-line{display:block;overflow:hidden}
+  .tr-line .tr-in{display:block;transform:translateY(115%)}
+  .tags{display:flex;gap:.6rem;flex-wrap:wrap;margin-bottom:1.6rem}
+  .tag{font-size:.68rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--ink);background:#fff;border:1px solid var(--line);border-radius:999px;padding:.5rem 1rem}
+  .tag.v{color:var(--violet);border-color:rgba(108,87,201,.3)}
+  .hero h1{font-family:'Geologica',sans-serif;font-weight:500;font-size:clamp(2.1rem,4.6vw,3.9rem);line-height:1.1;letter-spacing:-.025em;max-width:17ch}
+  .hero h1 em{font-style:normal;color:var(--tur)}
+  .hero .sub{margin-top:1.2rem;font-size:1rem;color:var(--grey);max-width:52ch;line-height:1.6}
+  .hero .cta-row{display:flex;gap:.9rem;margin-top:2.2rem;flex-wrap:wrap}
+  .hero-img{margin-top:3.2rem;border-radius:1.2rem 1.2rem 0 0;overflow:hidden;aspect-ratio:21/8;position:relative}
+  .hero-img img{width:100%;height:100%;object-fit:cover;display:block;transform:scale(1.06);animation:kenburns 26s ease-in-out infinite alternate;will-change:transform}
+  @keyframes kenburns{from{transform:scale(1.06) translate(0,0)}to{transform:scale(1.14) translate(-1.5%,-2%)}}
+  .hero-img .strip{position:absolute;left:0;right:0;bottom:0;display:grid;grid-template-columns:repeat(4,1fr);background:rgba(14,42,56,.82);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);color:#fff}
+  .strip div{padding:1.1rem 1.4rem;border-right:1px solid rgba(255,255,255,.12)}
+  .strip div:last-child{border-right:none}
+  .strip b{font-family:'Geologica',sans-serif;font-weight:500;font-size:1.5rem;display:block}
+  .strip span{font-size:.7rem;opacity:.75}
+  @media(max-width:900px){.hero-img{aspect-ratio:4/3}.hero-img .strip{grid-template-columns:1fr 1fr}.strip div:nth-child(2){border-right:none}}
+
+  /* ---------- КАРТОЧКИ ПРОЕКТОВ (плотные, как у «Разума») ---------- */
+  .plist{padding:5.5rem 0}
+  .sec-head{display:flex;align-items:flex-end;justify-content:space-between;gap:1rem;margin-bottom:2.4rem;flex-wrap:wrap}
+  .sec-head h2{font-family:'Geologica',sans-serif;font-weight:500;font-size:clamp(1.5rem,2.8vw,2.3rem);letter-spacing:-.02em}
+  .sec-head .note{font-size:.78rem;color:var(--grey);max-width:34ch;text-align:right}
+  .pgrid{display:grid;grid-template-columns:1fr 1fr;gap:1.4rem}
+  .pc{background:#fff;border:1px solid var(--line);border-radius:1.1rem;overflow:hidden;display:flex;flex-direction:column;transition:box-shadow .3s,transform .3s}
+  .pc{position:relative}
+  .pc:hover{box-shadow:0 22px 50px rgba(28,36,48,.12);transform:translateY(-3px)}
+  .pc::before{content:"";position:absolute;inset:0;z-index:2;pointer-events:none;opacity:0;transition:opacity .4s;border-radius:inherit;
+    background:radial-gradient(300px circle at var(--mx,50%) var(--my,50%),rgba(46,140,150,.10),transparent 65%)}
+  .pc:hover::before{opacity:1}
+  .pc .im{position:relative;aspect-ratio:16/7;overflow:hidden}
+  .pc .im img{width:100%;height:100%;object-fit:cover;transition:transform .8s cubic-bezier(.2,.6,.2,1)}
+  .pc:hover .im img{transform:scale(1.05)}
+  .pc .st{position:absolute;top:.9rem;left:.9rem;font-size:.62rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;background:#fff;border-radius:999px;padding:.4rem .8rem}
+  .pc .st.build{color:var(--tur)}
+  .pc .st.done{color:#3A8C4E}
+  .pc .bd{padding:1.4rem 1.5rem 1.5rem;display:flex;flex-direction:column;gap:.9rem;flex:1}
+  .pc h3{font-family:'Geologica',sans-serif;font-weight:500;font-size:1.2rem;display:flex;align-items:baseline;gap:.7rem}
+  .pc h3 small{font-size:.72rem;font-weight:400;color:var(--grey)}
+  .rows{display:flex;flex-direction:column}
+  .row{display:flex;justify-content:space-between;align-items:center;padding:.55rem .4rem;margin:0 -.4rem;border-bottom:1px dashed var(--line);font-size:.85rem;border-radius:.4rem;transition:background .25s}
+  .row:hover{background:rgba(46,140,150,.06)}
+  .row:last-child{border-bottom:none}
+  .row .t{color:var(--ink)}
+  .row .n{color:var(--grey);font-size:.75rem;margin-left:auto;margin-right:1.2rem}
+  .row .p{font-weight:700;white-space:nowrap}
+  .pc .foot{margin-top:auto;display:flex;justify-content:space-between;align-items:center}
+  .pc .foot .btn{padding:.65rem 1.3rem;font-size:.78rem}
+  .pc .foot .more{font-size:.78rem;color:var(--tur);text-decoration:none;font-weight:600}
+  @media(max-width:900px){.pgrid{grid-template-columns:1fr}}
+
+  /* ---------- БЕГУЩАЯ СТРОКА ---------- */
+  .ticker{background:var(--ink);color:var(--sand);overflow:hidden;white-space:nowrap;padding:.9rem 0}
+  .ticker .trk{display:inline-block;font-family:'Geologica',sans-serif;font-weight:400;font-size:.8rem;letter-spacing:.18em;text-transform:uppercase;animation:tick 34s linear infinite}
+  .ticker .trk em{font-style:normal;color:#7FD1CB;margin:0 1.2rem}
+
+  @keyframes tick{to{transform:translateX(-50%)}}
+
+  /* ---------- ИНВЕСТ-БЛОК (глубокая вода, как у «Сансары») ---------- */
+  .invest{background:var(--sea);color:#fff;padding:5.5rem 0;position:relative;overflow:hidden}
+  /* медленные волны */
+  .waves{position:absolute;inset:auto 0 0 0;height:55%;pointer-events:none;opacity:.5}
+  .waves path{fill:none;stroke:rgba(127,209,203,.16);stroke-width:1.5}
+  .waves path:nth-child(2){stroke:rgba(127,209,203,.10);animation-delay:-6s}
+  .waves path:nth-child(3){stroke:rgba(108,87,201,.12);animation-delay:-12s}
+  .waves path{animation:wavemove 18s ease-in-out infinite alternate}
+  @keyframes wavemove{from{transform:translateX(0)}to{transform:translateX(-4%)}}
+  .invest .container{position:relative}
+  .invest .grid{display:grid;grid-template-columns:1.1fr 1fr;gap:3rem;align-items:center}
+  .invest h2{font-family:'Geologica',sans-serif;font-weight:500;font-size:clamp(1.6rem,3vw,2.5rem);letter-spacing:-.02em;line-height:1.2}
+  .invest h2 em{font-style:normal;color:#7FD1CB}
+  .invest p{margin-top:1.1rem;font-size:.95rem;color:rgba(255,255,255,.75);line-height:1.65;max-width:46ch}
+  .invest .facts{display:flex;flex-direction:column}
+  .fact{display:flex;justify-content:space-between;align-items:baseline;padding:1.05rem 0;border-bottom:1px solid rgba(255,255,255,.14);gap:1rem}
+  .fact:first-child{border-top:1px solid rgba(255,255,255,.14)}
+  .fact .k{font-size:.85rem;color:rgba(255,255,255,.75)}
+  .fact .v{font-family:'Geologica',sans-serif;font-weight:500;font-size:1.35rem;white-space:nowrap}
+  .fact .v small{font-size:.7rem;font-weight:400;color:rgba(255,255,255,.6)}
+  .invest .btn{margin-top:1.8rem}
+  .invest .fine{margin-top:1.2rem;font-size:.64rem;color:rgba(255,255,255,.45);max-width:60ch;line-height:1.5}
+  @media(max-width:900px){.invest .grid{grid-template-columns:1fr}}
+
+  /* ---------- ДОВЕРИЕ: «сайт — первоисточник цен» ---------- */
+  .trust{padding:5.5rem 0;background:var(--sand-2)}
+  .tgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.3rem;margin-top:2.4rem}
+  .tc{background:#fff;border:1px solid var(--line);border-radius:1rem;padding:1.6rem}
+  .tc .ic{width:42px;height:42px;border-radius:.7rem;background:rgba(46,140,150,.12);color:var(--tur);display:grid;place-items:center;font-size:1.1rem;margin-bottom:1rem}
+  .tc b{font-family:'Geologica',sans-serif;font-weight:500;font-size:1rem;display:block;margin-bottom:.5rem}
+  .tc p{font-size:.82rem;color:var(--grey);line-height:1.6}
+  .tc p u{text-decoration:none;color:var(--ink);font-weight:600}
+  @media(max-width:900px){.tgrid{grid-template-columns:1fr}}
+
+  /* ---------- ЗАЯВКА С КОНТЕКСТОМ ---------- */
+  .lead2{padding:5.5rem 0 6rem}
+  .lead2 .card{background:var(--sea);color:#fff;border-radius:1.3rem;padding:3rem;display:grid;grid-template-columns:1fr 1.1fr;gap:2.6rem;position:relative;overflow:hidden}
+  .lead2 .card::before{content:"";position:absolute;inset:0;background:radial-gradient(70% 100% at 90% 0%,rgba(46,140,150,.35),transparent 60%)}
+  .lead2 .card>*{position:relative}
+  .lead2 h2{font-family:'Geologica',sans-serif;font-weight:500;font-size:clamp(1.4rem,2.4vw,2rem);line-height:1.25}
+  .lead2 .why{margin-top:1.2rem;font-size:.85rem;color:rgba(255,255,255,.7);line-height:1.6;max-width:40ch}
+  .qform{display:flex;flex-direction:column;gap:1.1rem}
+  .q{font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.6)}
+  .chips{display:flex;gap:.55rem;flex-wrap:wrap}
+  .ch{font-family:inherit;font-size:.8rem;font-weight:600;color:#fff;background:transparent;border:1px solid rgba(255,255,255,.3);border-radius:999px;padding:.6rem 1.2rem;cursor:pointer;transition:all .25s}
+  .ch.on{background:#fff;color:var(--sea);border-color:#fff}
+  .qform input[type=tel]{font-family:inherit;font-size:.9rem;color:#fff;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.2);border-radius:.8rem;padding:1rem 1.2rem;outline:none}
+  .qform input[type=tel]:focus{border-color:#7FD1CB}
+  .qform .btn-sea{width:100%;text-align:center}
+  .ctx{font-size:.72rem;color:rgba(255,255,255,.55);line-height:1.5}
+  .ctx b{color:#7FD1CB}
+  @media(max-width:900px){.lead2 .card{grid-template-columns:1fr;padding:1.8rem}}
+
+  .ft{padding:2.2rem 0 5rem;font-size:.68rem;color:var(--grey);line-height:1.7}
+</style>
+</head>
+<body>
+
+<div class="grain" aria-hidden="true"></div>
+<div class="back"><a href="index.html">← к превью и концепциям</a></div>
+
+<header class="hd">
+  <a class="logo" href="#">Симво<span>л</span></a>
+  <nav>
+    <a href="#plist">Проекты и цены</a>
+    <a href="#invest">Инвестиции</a>
+    <a href="#trust">Гарантии</a>
+  </nav>
+  <a class="tel" href="tel:+78000000000">8 800 000-00-00</a>
+  <a class="btn btn-sea" href="#lead">Получить подборку</a>
+</header>
+
+<!-- HERO: оффер с ценой, 3 тега-крючка -->
+<section class="hero">
+  <div class="blob b1" aria-hidden="true"></div>
+  <div class="blob b2" aria-hidden="true"></div>
+  <div class="container">
+    <div class="tags reveal">
+      <span class="tag v">Первоисточник цен — от застройщика</span>
+      <span class="tag">6 проектов · Ижевск и Крым</span>
+      <span class="tag">Сдаём в срок с 2021 года</span>
+    </div>
+    <h1 class="d reveal">Квартиры от 4,8 млн ₽<br>у пруда <em>и у моря</em></h1>
+    <p class="sub reveal">Один застройщик — два мира. Городские кварталы в Ижевске и белые террасы на побережье Крыма. Цены на сайте — актуальные, без «уточните у менеджера».</p>
+    <div class="cta-row reveal">
+      <a class="btn btn-sea btn-nest" href="#plist">Смотреть цены <span class="btn-ico">↓</span></a>
+      <a class="btn btn-line" href="#lead">Подобрать за 2 минуты</a>
+    </div>
+  </div>
+  <div class="container">
+    <div class="hero-img reveal">
+      <img src="img/real.jpg" alt="Сданный дом Символ Девелопмент">
+      <div class="strip">
+        <div><b data-cnt="10">0</b><span>домов сдано</span></div>
+        <div><b>0</b><span>переносов сроков</span></div>
+        <div><b data-cnt="2">0</b><span>региона присутствия</span></div>
+        <div><b>5 мин</b><span>до воды из каждого квартала</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ПРОЕКТЫ: плотные карточки с разбивкой и ценами сразу -->
+<section class="plist" id="plist">
+  <div class="container">
+    <div class="sec-head reveal">
+      <h2 class="d">Проекты и цены — без звонка менеджеру</h2>
+      <div class="note">Разбивка по типам и стоимость видны сразу. Обновляем при каждом изменении цен.</div>
+    </div>
+    <div class="pgrid">
+      <div class="pc reveal">
+        <div class="im"><img src="img/metafora.jpg" alt="ЖК Метафора" loading="lazy"><span class="st build">Строится · IV кв. 2027</span></div>
+        <div class="bd">
+          <h3 class="d">Метафора <small>Ижевск · у пруда</small></h3>
+          <div class="rows">
+            <div class="row"><span class="t">Студии</span><span class="n">осталось 24</span><span class="p">от 3,9 млн ₽</span></div>
+            <div class="row"><span class="t">1-комнатные</span><span class="n">осталось 61</span><span class="p">от 5,2 млн ₽</span></div>
+            <div class="row"><span class="t">2-комнатные</span><span class="n">осталось 38</span><span class="p">от 6,8 млн ₽</span></div>
+            <div class="row"><span class="t">3-комнатные</span><span class="n">осталось 12</span><span class="p">от 8,9 млн ₽</span></div>
+          </div>
+          <div class="foot"><a class="btn btn-sea" href="#lead">Выбрать квартиру</a><a class="more" href="#">О проекте →</a></div>
+        </div>
+      </div>
+      <div class="pc reveal">
+        <div class="im"><img src="img/sok.jpg" alt="ЖК СОК" loading="lazy"><span class="st build">Строится · II кв. 2027</span></div>
+        <div class="bd">
+          <h3 class="d">СОК <small>Евпатория · 250 м до моря</small></h3>
+          <div class="rows">
+            <div class="row"><span class="t">Студии</span><span class="n">осталось 17</span><span class="p">от 6,1 млн ₽</span></div>
+            <div class="row"><span class="t">1-комнатные</span><span class="n">осталось 42</span><span class="p">от 7,4 млн ₽</span></div>
+            <div class="row"><span class="t">2-комнатные</span><span class="n">осталось 29</span><span class="p">от 9,8 млн ₽</span></div>
+            <div class="row"><span class="t">Апартаменты с террасой</span><span class="n">осталось 6</span><span class="p">от 14,2 млн ₽</span></div>
+          </div>
+          <div class="foot"><a class="btn btn-sea" href="#lead">Выбрать квартиру</a><a class="more" href="#">О проекте →</a></div>
+        </div>
+      </div>
+      <div class="pc reveal">
+        <div class="im"><img src="img/leonov.jpg" alt="ЖК Леонов" loading="lazy"><span class="st build">Строится · III кв. 2026</span></div>
+        <div class="bd">
+          <h3 class="d">Леонов <small>Ижевск · квартал героев</small></h3>
+          <div class="rows">
+            <div class="row"><span class="t">1-комнатные</span><span class="n">осталось 23</span><span class="p">от 4,8 млн ₽</span></div>
+            <div class="row"><span class="t">2-комнатные</span><span class="n">осталось 31</span><span class="p">от 6,2 млн ₽</span></div>
+            <div class="row"><span class="t">3-комнатные</span><span class="n">осталось 9</span><span class="p">от 7,9 млн ₽</span></div>
+          </div>
+          <div class="foot"><a class="btn btn-sea" href="#lead">Выбрать квартиру</a><a class="more" href="#">О проекте →</a></div>
+        </div>
+      </div>
+      <div class="pc reveal">
+        <div class="im"><img src="img/monblan.jpg" alt="ЖК Монблан" loading="lazy"><span class="st done">Сдан · 2024</span></div>
+        <div class="bd">
+          <h3 class="d">Монблан <small>Ижевск · центр</small></h3>
+          <div class="rows">
+            <div class="row"><span class="t">2-комнатные</span><span class="n">осталось 4</span><span class="p">от 7,1 млн ₽</span></div>
+            <div class="row"><span class="t">3-комнатные</span><span class="n">осталось 2</span><span class="p">от 9,4 млн ₽</span></div>
+            <div class="row"><span class="t">Пентхаусы</span><span class="n">остался 1</span><span class="p">14,8 млн ₽</span></div>
+          </div>
+          <div class="foot"><a class="btn btn-sea" href="#lead">Выбрать квартиру</a><a class="more" href="#">О проекте →</a></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- БЕГУЩАЯ СТРОКА -->
+<div class="ticker" aria-hidden="true">
+  <span class="trk">Первоисточник цен от застройщика <em>◆</em> Сдаём в срок с 2021 года <em>◆</em> Ижевск и Крым — один застройщик <em>◆</em> Документы 214-ФЗ в открытом доступе <em>◆</em> Первоисточник цен от застройщика <em>◆</em> Сдаём в срок с 2021 года <em>◆</em> Ижевск и Крым — один застройщик <em>◆</em> Документы 214-ФЗ в открытом доступе <em>◆</em> </span>
+</div>
+
+<!-- ИНВЕСТИЦИИ: глубокая вода -->
+<section class="invest" id="invest">
+  <svg class="waves" viewBox="0 0 1440 300" preserveAspectRatio="none" aria-hidden="true">
+    <path d="M-40 80 C240 40, 480 120, 760 80 S1240 40, 1500 90"/>
+    <path d="M-40 160 C260 120, 520 200, 800 160 S1260 120, 1500 170"/>
+    <path d="M-40 240 C240 200, 500 280, 780 240 S1240 200, 1500 250"/>
+  </svg>
+  <div class="container">
+    <div class="grid">
+      <div>
+        <h2 class="d reveal">Квартира у моря,<br>которая <em>зарабатывает</em>,<br>пока вы в городе</h2>
+        <p class="reveal">Крымские проекты Символа — это не только отпуск. Управляющая компания сдаёт ваши апартаменты, пока вы дома: посуточно в сезон, помесячно зимой. Отчёт — в личном кабинете.</p>
+        <a class="btn btn-sea reveal" href="#lead">Получить инвест-расчёт</a>
+        <p class="fine reveal">Расчёты доходности являются прогнозными и не являются гарантией дохода или публичной офертой (ст. 437 ГК РФ). Точные условия — в договоре с управляющей компанией.</p>
+      </div>
+      <div class="facts reveal">
+        <div class="fact"><span class="k">Вход в инвестицию</span><span class="v">от 6,1 млн ₽</span></div>
+        <div class="fact"><span class="k">Прогнозная доходность</span><span class="v">до 14% <small>годовых</small></span></div>
+        <div class="fact"><span class="k">Загрузка в сезон</span><span class="v">до 92%</span></div>
+        <div class="fact"><span class="k">Управление и сдача</span><span class="v">УК «Символ»</span></div>
+        <div class="fact"><span class="k">До моря</span><span class="v">250 м</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ДОВЕРИЕ -->
+<section class="trust" id="trust">
+  <div class="container">
+    <div class="sec-head reveal">
+      <h2 class="d">Почему этому сайту можно верить</h2>
+      <div class="note">Правила, которые мы установили себе сами.</div>
+    </div>
+    <div class="tgrid">
+      <div class="tc reveal">
+        <div class="ic">₽</div>
+        <b class="d">Цены — настоящие</b>
+        <p>Этот сайт — <u>первоисточник цен от застройщика</u>, а не карточка на агрегаторе. Стоимость и остатки синхронизируются с системой продаж — если квартира видна, она свободна.</p>
+      </div>
+      <div class="tc reveal">
+        <div class="ic">§</div>
+        <b class="d">Документы — в один клик</b>
+        <p>Проектные декларации по 214-ФЗ, разрешения на строительство и отчёты — <u>в открытом доступе</u>, без запросов и ожиданий. Обновляются автоматически.</p>
+      </div>
+      <div class="tc reveal">
+        <div class="ic">◉</div>
+        <b class="d">Стройка — на виду</b>
+        <p>Фотолента каждого объекта пополняется ежемесячно, ключевые площадки — <u>с онлайн-камерами</u>. Покупаете из другого города — видите всё, как местный.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ЗАЯВКА С КОНТЕКСТОМ -->
+<section class="lead2" id="lead">
+  <div class="container">
+    <div class="card reveal">
+      <div>
+        <h2 class="d">Подборка под вашу задачу — за 2 минуты</h2>
+        <p class="why">Выберите два параметра и оставьте телефон. Менеджер получит не «заявку», а вашу задачу — и перезвонит уже с вариантами, в рабочее время за 15 минут.</p>
+      </div>
+      <form class="qform" id="qform">
+        <div>
+          <div class="q">Где ищете</div>
+          <div class="chips" data-g="geo">
+            <button type="button" class="ch on">Ижевск</button>
+            <button type="button" class="ch">У моря</button>
+            <button type="button" class="ch">Рассматриваю оба</button>
+          </div>
+        </div>
+        <div>
+          <div class="q">Зачем</div>
+          <div class="chips" data-g="goal">
+            <button type="button" class="ch on">Жить</button>
+            <button type="button" class="ch">Инвестировать</button>
+            <button type="button" class="ch">Детям / родителям</button>
+          </div>
+        </div>
+        <input type="tel" name="phone" placeholder="+7 (___) ___-__-__" autocomplete="tel" aria-label="Телефон">
+        <button class="btn btn-sea" type="submit">Получить подборку</button>
+        <p class="ctx" id="ctx">Менеджер увидит: <b>Ижевск · Жить</b></p>
+      </form>
+    </div>
+  </div>
+</section>
+
+<footer class="ft">
+  <div class="container">
+    Информация на странице носит демонстрационный характер (прототип), не является публичной офертой (ст. 437 ГК РФ). Цены и остатки — условные данные для макета. © Символ Девелопмент, 2026.
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.18/dist/lenis.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+<script>
+(function(){
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* чипы: заявка с контекстом (паттерн IDA — лид приходит с задачей) */
+  const ctx = document.getElementById('ctx');
+  function updCtx(){
+    const geo = document.querySelector('[data-g=geo] .ch.on').textContent;
+    const goal = document.querySelector('[data-g=goal] .ch.on').textContent;
+    ctx.innerHTML = 'Менеджер увидит: <b>' + geo + ' · ' + goal + '</b>';
+  }
+  document.querySelectorAll('.chips').forEach(g=>{
+    g.querySelectorAll('.ch').forEach(b=>b.addEventListener('click', ()=>{
+      g.querySelectorAll('.ch').forEach(x=>x.classList.toggle('on', x===b));
+      updCtx();
+    }));
+  });
+
+  /* маска телефона */
+  const ph = document.querySelector('[name=phone]');
+  ph.addEventListener('input', ()=>{
+    let d = ph.value.replace(/\D/g,'').replace(/^[78]/,'').slice(0,10);
+    let out = '+7';
+    if (d.length) out += ' (' + d.slice(0,3);
+    if (d.length >= 4) out += ') ' + d.slice(3,6);
+    if (d.length >= 7) out += '-' + d.slice(6,8);
+    if (d.length >= 9) out += '-' + d.slice(8,10);
+    ph.value = out;
+  });
+  document.getElementById('qform').addEventListener('submit', e=>{
+    e.preventDefault();
+    alert('Прототип: заявка ушла бы в CRM с контекстом — ' + ctx.textContent.replace('Менеджер увидит: ',''));
+  });
+
+  /* спотлайт на карточках */
+  document.querySelectorAll('.pc').forEach(c=>{
+    c.addEventListener('pointermove', e=>{
+      const r = c.getBoundingClientRect();
+      c.style.setProperty('--mx', (e.clientX - r.left) + 'px');
+      c.style.setProperty('--my', (e.clientY - r.top) + 'px');
+    });
+  });
+
+  /* анимации: Lenis + построчный h1 + reveal + счётчики + параллакс */
+  const hasLibs = typeof gsap !== 'undefined' && typeof Lenis !== 'undefined';
+  if (hasLibs && !reduced){
+    gsap.registerPlugin(ScrollTrigger);
+    const lenis = new Lenis({ lerp:.1 });
+    lenis.on('scroll', ScrollTrigger.update);
+    gsap.ticker.add(t=>lenis.raf(t*1000));
+    gsap.ticker.lagSmoothing(0);
+
+    /* h1 выезжает построчно */
+    const h1 = document.querySelector('.hero h1');
+    h1.classList.remove('reveal'); h1.style.opacity = 1; h1.style.transform = 'none';
+    const lines = h1.innerHTML.split(/<br\s*\/?>/i);
+    h1.innerHTML = lines.map(l=>'<span class="tr-line"><span class="tr-in">'+l+'</span></span>').join('');
+    gsap.to(h1.querySelectorAll('.tr-in'), { y:0, duration:1.1, stagger:.14, ease:'power3.out', delay:.15 });
+
+    /* hero-фото: лёгкий параллакс при скролле */
+    gsap.to('.hero-img img', { yPercent:6, ease:'none',
+      scrollTrigger:{ trigger:'.hero-img', start:'top bottom', end:'bottom top', scrub:true } });
+
+    /* карточки проектов — каскадом */
+    gsap.utils.toArray('.pgrid .pc').forEach((el,i)=>{
+      el.classList.remove('reveal');
+      gsap.fromTo(el, {opacity:0, y:34}, { opacity:1, y:0, duration:.85, delay:(i%2)*.12, ease:'power3.out',
+        scrollTrigger:{ trigger:el, start:'top 88%' } });
+    });
+
+    gsap.utils.toArray('.reveal').forEach(el=>{
+      gsap.to(el, { opacity:1, y:0, duration:.8, ease:'power3.out',
+        scrollTrigger:{ trigger:el, start:'top 88%' } });
+    });
+    document.querySelectorAll('[data-cnt]').forEach(el=>{
+      gsap.fromTo(el, {innerText:0}, { innerText:+el.dataset.cnt, duration:1.4, snap:{innerText:1}, ease:'power2.out',
+        scrollTrigger:{ trigger:el, start:'top 92%' } });
+    });
+  } else {
+    document.querySelectorAll('.reveal').forEach(el=>{ el.style.opacity=1; el.style.transform='none'; });
+    document.querySelectorAll('[data-cnt]').forEach(el=>{ el.innerText = el.dataset.cnt; });
+  }
+})();
+</script>
+</body>
+</html>

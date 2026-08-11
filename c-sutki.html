@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Символ · Концепция В — «Сутки Символа»</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@200;300;400;500&family=Onest:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{ --night:#14102A; --violet:#6C57C9; --lilac:#A793F2; --glow:#D9CCF5 }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:'Onest',sans-serif;color:#fff;overflow-x:hidden;background:#1A1030}
+  .display{font-family:'Unbounded',sans-serif;font-weight:300;letter-spacing:-.015em}
+
+  .demo-nav{position:fixed;bottom:1rem;left:1rem;z-index:200;display:flex;gap:.4rem;font-size:.68rem}
+  .demo-nav a{color:#fff;background:rgba(20,16,42,.55);border:1px solid rgba(255,255,255,.25);border-radius:999px;padding:.4rem .8rem;text-decoration:none;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+  .demo-nav a.cur{background:var(--violet);border-color:var(--violet)}
+
+  /* небо на весь сайт — цвет управляется скроллом */
+  .sky{position:fixed;inset:0;z-index:-2;background:linear-gradient(to bottom,var(--sky1,#241B4C),var(--sky2,#8672D6))}
+  .stars{position:fixed;inset:0;z-index:-1;opacity:0;transition:opacity 1s;background-image:radial-gradient(1px 1px at 20% 30%,#fff,transparent),radial-gradient(1px 1px at 60% 15%,#fff,transparent),radial-gradient(1.5px 1.5px at 80% 40%,#fff,transparent),radial-gradient(1px 1px at 35% 60%,#fff,transparent),radial-gradient(1px 1px at 90% 70%,#fff,transparent),radial-gradient(1.2px 1.2px at 10% 80%,#fff,transparent)}
+  body.night .stars{opacity:.8}
+  .grain{position:fixed;inset:0;z-index:5;pointer-events:none;opacity:.05;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E")}
+
+  /* часы */
+  .clock{position:fixed;top:1.2rem;right:1.6rem;z-index:100;text-align:right}
+  .clock b{font-family:'Unbounded',sans-serif;font-weight:200;font-size:1.6rem;display:block}
+  .clock span{font-size:.6rem;letter-spacing:.3em;text-transform:uppercase;color:var(--glow)}
+
+  .logo{position:fixed;top:1.4rem;left:50%;transform:translateX(-50%);z-index:100;font-family:'Unbounded',sans-serif;font-weight:400;font-size:.95rem;letter-spacing:.3em;text-transform:uppercase}
+  .logo span{color:var(--lilac)}
+
+  .scene{min-height:100vh;display:flex;align-items:center;padding:6rem 2rem}
+  .scene .inner{max-width:1050px;margin:0 auto;width:100%;display:flex;align-items:center;gap:3rem}
+  .scene:nth-child(even) .inner{flex-direction:row-reverse}
+  .scene .txt{width:44%}
+  .scene .tm{font-family:'Unbounded',sans-serif;font-weight:200;font-size:clamp(2.2rem,5vw,3.6rem);color:var(--glow)}
+  .scene h2{font-size:clamp(1.3rem,2.4vw,2rem);margin-top:.8rem;line-height:1.3}
+  .scene p{margin-top:1rem;font-size:.92rem;color:rgba(245,243,251,.75);line-height:1.65;max-width:40ch}
+  .scene .pr{margin-top:1.2rem;font-size:.68rem;letter-spacing:.3em;text-transform:uppercase;color:var(--lilac)}
+  .scene img{width:52%;border-radius:1.1rem;box-shadow:0 28px 70px rgba(10,7,20,.55)}
+  .scene.first{flex-direction:column;justify-content:center;text-align:center}
+  .scene.first .tm{font-size:clamp(3.4rem,9vw,6.5rem)}
+  .scene.first p{margin-left:auto;margin-right:auto}
+  .hint{margin-top:3rem;font-size:.62rem;letter-spacing:.34em;text-transform:uppercase;color:rgba(255,255,255,.55)}
+  .cta{display:inline-block;margin-top:2rem;font-size:.85rem;font-weight:600;color:#fff;background:var(--violet);border-radius:999px;padding:1.05rem 2.4rem;text-decoration:none;transition:background .3s,transform .3s}
+  .cta:hover{background:#5A45B5;transform:translateY(-2px)}
+
+  .reveal{opacity:0;transform:translateY(34px)}
+  @media (max-width:900px){
+    .scene .inner{flex-direction:column!important;gap:1.4rem}
+    .scene .txt,.scene img{width:100%}
+  }
+  @media (prefers-reduced-motion:reduce){*{transition-duration:.01s!important}.reveal{opacity:1;transform:none}}
+</style>
+</head>
+<body>
+
+<div class="sky" id="sky"></div>
+<div class="stars"></div>
+<div class="grain"></div>
+
+<nav class="demo-nav">
+  <a href="a-dva-mira.html">А · Два мира</a>
+  <a href="b-znak.html">Б · Знак</a>
+  <a class="cur" href="c-sutki.html">В · Сутки</a>
+  <a href="f-kino.html">Кино</a>
+  <a href="index.html">← превью</a>
+</nav>
+
+<div class="logo">Симво<span>л</span></div>
+<div class="clock"><b id="clockTime">05:40</b><span id="clockCap">рассвет</span></div>
+
+<section class="scene first">
+  <div>
+    <div class="tm display">05:40</div>
+    <h2 class="display">Сутки, прожитые в Символе</h2>
+    <p>Один день — от первого света над прудом до последнего окна, погасшего у моря. Скролл — это время.</p>
+    <div class="hint">Листайте — время пойдёт</div>
+  </div>
+</section>
+
+<section class="scene" data-time="07:00" data-cap="утро" data-sky1="#3A2E6E" data-sky2="#C9903F">
+  <div class="inner">
+    <div class="txt">
+      <div class="tm display reveal">07:00</div>
+      <h2 class="display reveal">Двор просыпается</h2>
+      <p class="reveal">Роса на газонах Метафоры, первые бегуны, свет ещё золотой. Дворы без машин слышат только шаги.</p>
+      <div class="pr reveal">Метафора · Ижевск</div>
+    </div>
+    <img class="reveal" src="img/utro-dvor.jpg" alt="Утро во дворе" loading="lazy">
+  </div>
+</section>
+
+<section class="scene" data-time="13:00" data-cap="день" data-sky1="#4A6FB8" data-sky2="#A8C4E8">
+  <div class="inner">
+    <div class="txt">
+      <div class="tm display reveal">13:00</div>
+      <h2 class="display reveal">Город в полном ритме</h2>
+      <p class="reveal">Велосипеды, коляски, обед на террасе кафе на первом этаже Леонова. Жизнь квартала — на улице.</p>
+      <div class="pr reveal">Леонов · Ижевск</div>
+    </div>
+    <img class="reveal" src="img/den-gorod.jpg" alt="День в городе" loading="lazy">
+  </div>
+</section>
+
+<section class="scene" data-time="19:30" data-cap="вечер" data-sky1="#41286B" data-sky2="#D77A5E">
+  <div class="inner">
+    <div class="txt">
+      <div class="tm display reveal">19:30</div>
+      <h2 class="display reveal">Закат над морем</h2>
+      <p class="reveal">В СОКе солнце садится прямо в воду. С террасы Ласки виден весь горизонт — и ни одной лишней мысли.</p>
+      <div class="pr reveal">СОК · Евпатория</div>
+    </div>
+    <img class="reveal" src="img/sok.jpg" alt="Закат у моря" loading="lazy">
+  </div>
+</section>
+
+<section class="scene" data-time="23:00" data-cap="ночь" data-sky1="#0D0921" data-sky2="#241B4C">
+  <div class="inner">
+    <div class="txt">
+      <div class="tm display reveal">23:00</div>
+      <h2 class="display reveal">Окна ещё тёплые</h2>
+      <p class="reveal">Город спит, но в окнах Монблана — свет: кто-то читает, кто-то смотрит на огни. Дом работает тихо.</p>
+      <div class="pr reveal">Монблан · Ижевск</div>
+      <a class="cta reveal" href="#">Прожить этот день у себя</a>
+    </div>
+    <img class="reveal" src="img/noch-okna.jpg" alt="Ночные окна" loading="lazy">
+  </div>
+</section>
+
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.18/dist/lenis.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+<script>
+(function(){
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const sky = document.getElementById('sky');
+  const cT = document.getElementById('clockTime'), cC = document.getElementById('clockCap');
+
+  const hasLibs = typeof Lenis !== 'undefined' && typeof gsap !== 'undefined';
+  if (hasLibs && !reduced){
+    gsap.registerPlugin(ScrollTrigger);
+    const lenis = new Lenis({ lerp:.1 });
+    lenis.on('scroll', ScrollTrigger.update);
+    gsap.ticker.add(t=>lenis.raf(t*1000));
+    gsap.ticker.lagSmoothing(0);
+
+    /* каждая сцена перекрашивает небо, часы и включает звёзды ночью */
+    document.querySelectorAll('.scene[data-time]').forEach(s=>{
+      ScrollTrigger.create({
+        trigger:s, start:'top 55%', end:'bottom 55%',
+        onEnter:()=>setScene(s), onEnterBack:()=>setScene(s)
+      });
+    });
+    function setScene(s){
+      gsap.to(sky, { '--sky1':s.dataset.sky1, '--sky2':s.dataset.sky2, duration:1.4, ease:'power2.out' });
+      cT.textContent = s.dataset.time; cC.textContent = s.dataset.cap;
+      document.body.classList.toggle('night', s.dataset.cap === 'ночь');
+    }
+
+    gsap.utils.toArray('.reveal').forEach(el=>{
+      gsap.to(el, { opacity:1, y:0, duration:.9, ease:'power3.out',
+        scrollTrigger:{ trigger:el, start:'top 85%' } });
+    });
+  } else {
+    document.querySelectorAll('.reveal').forEach(el=>{ el.style.opacity=1; el.style.transform='none'; });
+  }
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Символ · Концепция А — «Два мира»</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@200;300;400;500&family=Onest:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --night:#14102A; --violet:#6C57C9; --lilac:#A793F2; --glow:#D9CCF5; --mist:#F5F3FB; --ink:#1B1730;
+    /* цвет-вэйфайндинг: город холодный, море тёплое */
+    --city-deep:#12102E; --sea-deep:#2A1834;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:'Onest',sans-serif;background:var(--city-deep);color:#fff;overflow-x:hidden;transition:background 1.2s}
+  .display{font-family:'Unbounded',sans-serif;font-weight:300;letter-spacing:-.015em}
+
+  .demo-nav{position:fixed;bottom:1rem;left:1rem;z-index:200;display:flex;gap:.4rem;font-size:.68rem}
+  .demo-nav a{color:#fff;background:rgba(20,16,42,.6);border:1px solid rgba(255,255,255,.25);border-radius:999px;padding:.4rem .8rem;text-decoration:none;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+  .demo-nav a.cur{background:var(--violet);border-color:var(--violet)}
+
+  /* ---------- HERO: переключатель миров ---------- */
+  .hero{position:relative;height:100vh;min-height:640px;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;overflow:hidden}
+  .world{position:absolute;inset:0;transition:opacity 1.4s ease}
+  .world.city{background:
+      radial-gradient(100% 80% at 50% 110%,rgba(108,87,201,.45),transparent 60%),
+      linear-gradient(to bottom,#0E0C26,#1B1540 55%,#3A2E6E)}
+  .world.sea{opacity:0;background:
+      radial-gradient(110% 85% at 50% 108%,rgba(240,180,160,.35),transparent 62%),
+      radial-gradient(80% 60% at 70% 90%,rgba(167,147,242,.4),transparent 65%),
+      linear-gradient(to bottom,#231637,#4A3080 55%,#8B62B8)}
+  body.sea-mode .world.city{opacity:0}
+  body.sea-mode .world.sea{opacity:1}
+  /* вертикальный ритм города / горизонт моря */
+  .city-lines{position:absolute;inset:0;background:repeating-linear-gradient(to right,transparent 0 118px,rgba(167,147,242,.05) 118px 120px);-webkit-mask-image:linear-gradient(to top,#000,transparent 70%);mask-image:linear-gradient(to top,#000,transparent 70%)}
+  .sea-horizon{position:absolute;left:0;right:0;bottom:26%;height:1px;background:linear-gradient(to right,transparent,rgba(255,220,200,.7) 30%,rgba(217,204,245,.8) 70%,transparent)}
+  .grain{position:absolute;inset:0;pointer-events:none;opacity:.05;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E")}
+
+  .logo{position:fixed;top:1.1rem;left:50%;transform:translateX(-50%);z-index:100;font-family:'Unbounded',sans-serif;font-weight:400;font-size:1rem;letter-spacing:.3em;text-transform:uppercase}
+  .logo span{color:var(--lilac)}
+
+  .hero-inner{position:relative;z-index:10;padding:0 1.5rem;max-width:900px}
+  .switch{
+    display:inline-flex;border:1px solid rgba(255,255,255,.3);border-radius:999px;padding:.3rem;margin-bottom:2.4rem;
+    -webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);background:rgba(20,16,42,.25);
+  }
+  .switch button{
+    font-family:'Onest',sans-serif;font-size:.8rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;
+    color:rgba(255,255,255,.65);background:transparent;border:none;border-radius:999px;padding:.75rem 1.8rem;cursor:pointer;
+    transition:all .5s cubic-bezier(.32,.72,0,1);
+  }
+  .switch button.on{background:#fff;color:var(--night)}
+  .hero h1{font-size:clamp(1.9rem,4.2vw,3.6rem);line-height:1.18;min-height:2.4em}
+  .hero h1 em{font-style:normal;color:var(--glow)}
+  .hero .sub{margin-top:1.4rem;font-size:.95rem;color:rgba(245,243,251,.75);max-width:44ch;margin-left:auto;margin-right:auto}
+  .hero .geo{margin-top:2.6rem;font-size:.68rem;letter-spacing:.4em;text-transform:uppercase;color:var(--lilac)}
+  .scroll-hint{position:absolute;bottom:1.4rem;left:50%;transform:translateX(-50%);z-index:10;font-size:.62rem;letter-spacing:.3em;text-transform:uppercase;color:rgba(255,255,255,.5)}
+
+  /* ---------- МАРШРУТ ---------- */
+  .route{position:relative;padding:8rem 0 6rem}
+  .route .container{max-width:1100px;margin:0 auto;padding:0 1.5rem}
+  .route-head{text-align:center;margin-bottom:4rem}
+  .route-head .eyebrow{font-size:.68rem;letter-spacing:.4em;text-transform:uppercase;color:var(--lilac);margin-bottom:1rem}
+  .route-head h2{font-size:clamp(1.5rem,3vw,2.5rem)}
+  .route-wrap{position:relative}
+  .route-svg{position:absolute;left:50%;top:0;height:100%;width:4px;transform:translateX(-2px)}
+  .route-svg path{stroke:rgba(167,147,242,.25);stroke-width:2;fill:none}
+  .route-svg path.drawn{stroke:var(--lilac);filter:drop-shadow(0 0 6px rgba(167,147,242,.8))}
+  .stop{display:flex;align-items:center;gap:2.5rem;margin-bottom:6rem;opacity:0;transform:translateY(40px)}
+  .stop:nth-child(even){flex-direction:row-reverse}
+  .stop img{width:46%;border-radius:1rem;box-shadow:0 24px 60px rgba(10,7,20,.5)}
+  .stop .info{width:46%}
+  .stop .info .city-tag{font-size:.62rem;letter-spacing:.3em;text-transform:uppercase;color:var(--lilac);margin-bottom:.7rem}
+  .stop .info h3{font-family:'Unbounded',sans-serif;font-weight:400;font-size:1.4rem;margin-bottom:.6rem}
+  .stop .info p{font-size:.88rem;color:rgba(245,243,251,.72);line-height:1.6}
+  .stop .dot{position:absolute;left:50%;transform:translateX(-50%);width:14px;height:14px;border-radius:50%;background:var(--lilac);box-shadow:0 0 16px rgba(167,147,242,.9)}
+
+  /* ---------- 7:00 / 7:00 ---------- */
+  .seven{padding:7rem 1.5rem;text-align:center}
+  .seven .clock{font-family:'Unbounded',sans-serif;font-weight:200;font-size:clamp(3rem,8vw,6rem);color:var(--glow)}
+  .seven .cap{font-size:.7rem;letter-spacing:.4em;text-transform:uppercase;color:var(--lilac);margin-top:.6rem;margin-bottom:3rem}
+  .seven-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.4rem;max-width:1100px;margin:0 auto}
+  .seven-card{position:relative;border-radius:1.1rem;overflow:hidden;aspect-ratio:3/2}
+  .seven-card img{width:100%;height:100%;object-fit:cover}
+  .seven-card .lbl{position:absolute;left:1.2rem;bottom:1.1rem;text-align:left;color:#fff;text-shadow:0 2px 14px rgba(10,7,20,.7)}
+  .seven-card .lbl b{font-family:'Unbounded',sans-serif;font-weight:400;font-size:1rem;display:block}
+  .seven-card .lbl i{font-style:normal;font-size:.75rem;opacity:.85}
+  .cta{display:inline-block;margin-top:3.4rem;font-size:.85rem;font-weight:600;color:#fff;background:var(--violet);border-radius:999px;padding:1.05rem 2.4rem;text-decoration:none;transition:background .3s,transform .3s}
+  .cta:hover{background:#5A45B5;transform:translateY(-2px)}
+
+  @media (max-width:900px){
+    .stop{flex-direction:column!important;gap:1.2rem}
+    .stop img,.stop .info{width:100%}
+    .route-svg{display:none}
+    .seven-grid{grid-template-columns:1fr}
+  }
+  @media (prefers-reduced-motion:reduce){*{transition-duration:.01s!important;animation:none!important}.stop{opacity:1;transform:none}}
+</style>
+</head>
+<body>
+
+<nav class="demo-nav">
+  <a class="cur" href="a-dva-mira.html">А · Два мира</a>
+  <a href="b-znak.html">Б · Знак</a>
+  <a href="c-sutki.html">В · Сутки</a>
+  <a href="f-kino.html">Кино</a>
+  <a href="index.html">← превью</a>
+</nav>
+
+<div class="logo">Симво<span>л</span></div>
+
+<section class="hero">
+  <div class="world city"><div class="city-lines"></div></div>
+  <div class="world sea"><div class="sea-horizon"></div></div>
+  <div class="grain"></div>
+  <div class="hero-inner">
+    <div class="switch" role="tablist" aria-label="Выбор мира">
+      <button id="btnCity" class="on">Город</button>
+      <button id="btnSea">Море</button>
+    </div>
+    <h1 class="display" id="heroTitle">Город, в котором<br><em>хочется расти</em></h1>
+    <p class="sub" id="heroSub">Кварталы у Ижевского пруда: ритм большого города и дворы, где тихо.</p>
+    <div class="geo" id="heroGeo">Ижевск · Метафора · Леонов · Монблан</div>
+  </div>
+  <div class="scroll-hint">Скролл — путешествие к морю</div>
+</section>
+
+<section class="route">
+  <div class="container">
+    <div class="route-head">
+      <p class="eyebrow">Маршрут</p>
+      <h2 class="display">1 800 километров<br>между двумя мирами</h2>
+    </div>
+    <div class="route-wrap" id="routeWrap">
+      <svg class="route-svg" viewBox="0 0 4 1000" preserveAspectRatio="none" aria-hidden="true">
+        <path d="M2 0 V1000"/>
+        <path class="drawn" id="routePath" d="M2 0 V1000"/>
+      </svg>
+      <div class="stop"><span class="dot"></span><img src="img/metafora.jpg" alt="Метафора" loading="lazy"><div class="info"><div class="city-tag">Ижевск · старт</div><h3>Метафора</h3><p>Новый уровень жизни в ритме города. Отсюда начинается путь Символа.</p></div></div>
+      <div class="stop"><span class="dot"></span><img src="img/leonov.jpg" alt="Леонов" loading="lazy"><div class="info"><div class="city-tag">Ижевск</div><h3>Леонов</h3><p>Квартал героев — кирпич, дворы с фонарями, вечерний свет в окнах.</p></div></div>
+      <div class="stop"><span class="dot"></span><img src="img/sok.jpg" alt="СОК" loading="lazy"><div class="info"><div class="city-tag">Евпатория · море ближе</div><h3>СОК</h3><p>Белый квартал у самого берега. Здесь фиолетовый теплеет.</p></div></div>
+      <div class="stop"><span class="dot"></span><img src="img/laska.jpg" alt="Ласка" loading="lazy"><div class="info"><div class="city-tag">Алушта · финиш</div><h3>Ласка</h3><p>Террасы над морем. Конец маршрута — и начало другой жизни.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<section class="seven">
+  <div class="clock display">7:00</div>
+  <div class="cap">Один час — два мира</div>
+  <div class="seven-grid">
+    <div class="seven-card"><img src="img/utro-dvor.jpg" alt="Утро в Ижевске"><div class="lbl"><b>Ижевск</b><i>двор ещё в росе, город просыпается</i></div></div>
+    <div class="seven-card"><img src="img/utro-more.jpg" alt="Утро у моря"><div class="lbl"><b>Крым</b><i>кофе на террасе, штиль до горизонта</i></div></div>
+  </div>
+  <a class="cta" href="#">Выбрать свой мир</a>
+</section>
+
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.18/dist/lenis.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+<script>
+(function(){
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* переключатель миров */
+  const titles = {
+    city: { h:'Город, в котором<br><em>хочется расти</em>', s:'Кварталы у Ижевского пруда: ритм большого города и дворы, где тихо.', g:'Ижевск · Метафора · Леонов · Монблан' },
+    sea:  { h:'Море, у которого<br><em>хочется мечтать</em>', s:'Белые террасы над Чёрным морем: штиль, горизонт и медленное время.', g:'Крым · СОК · Ласка · Высота' }
+  };
+  const bC = document.getElementById('btnCity'), bS = document.getElementById('btnSea');
+  const hT = document.getElementById('heroTitle'), hS = document.getElementById('heroSub'), hG = document.getElementById('heroGeo');
+  function setWorld(sea){
+    document.body.classList.toggle('sea-mode', sea);
+    bC.classList.toggle('on', !sea); bS.classList.toggle('on', sea);
+    const t = sea ? titles.sea : titles.city;
+    hT.style.opacity = 0; hS.style.opacity = 0; hG.style.opacity = 0;
+    setTimeout(()=>{ hT.innerHTML = t.h; hS.textContent = t.s; hG.textContent = t.g;
+      hT.style.transition = hS.style.transition = hG.style.transition = 'opacity .8s';
+      hT.style.opacity = 1; hS.style.opacity = 1; hG.style.opacity = 1; }, 350);
+  }
+  bC.addEventListener('click', ()=>setWorld(false));
+  bS.addEventListener('click', ()=>setWorld(true));
+
+  const hasLibs = typeof Lenis !== 'undefined' && typeof gsap !== 'undefined';
+  if (hasLibs && !reduced){
+    gsap.registerPlugin(ScrollTrigger);
+    const lenis = new Lenis({ lerp:.1 });
+    lenis.on('scroll', ScrollTrigger.update);
+    gsap.ticker.add(t=>lenis.raf(t*1000));
+    gsap.ticker.lagSmoothing(0);
+
+    /* цвет-вэйфайндинг: фон холодного города теплеет к морю по мере скролла */
+    gsap.to(document.body, { backgroundColor:'#2A1834', ease:'none',
+      scrollTrigger:{ trigger:'.route', start:'top bottom', end:'bottom top', scrub:true } });
+
+    /* маршрут прочерчивается по скроллу */
+    const path = document.getElementById('routePath');
+    const len = path.getTotalLength();
+    path.style.strokeDasharray = len;
+    path.style.strokeDashoffset = len;
+    gsap.to(path, { strokeDashoffset:0, ease:'none',
+      scrollTrigger:{ trigger:'#routeWrap', start:'top 70%', end:'bottom 60%', scrub:true } });
+
+    /* остановки появляются */
+    gsap.utils.toArray('.stop').forEach(s=>{
+      gsap.to(s, { opacity:1, y:0, duration:1, ease:'power3.out',
+        scrollTrigger:{ trigger:s, start:'top 80%' } });
+    });
+  } else {
+    document.querySelectorAll('.stop').forEach(s=>{ s.style.opacity=1; s.style.transform='none'; });
+  }
+})();
+</script>
+</body>
+</html>

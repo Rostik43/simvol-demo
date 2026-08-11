@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Символ · Тест — формации (пазл и буквы)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@200;300;400;500&family=Onest:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{ --night:#14102A; --violet:#6C57C9; --lilac:#A793F2; --glow:#D9CCF5 }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:'Onest',sans-serif;background:#100C22;color:#fff;overflow-x:hidden}
+  .display{font-family:'Unbounded',sans-serif;font-weight:300;letter-spacing:-.015em}
+
+  .demo-nav{position:fixed;bottom:1rem;left:1rem;z-index:200;display:flex;gap:.4rem;font-size:.68rem}
+  .demo-nav a{color:#fff;background:rgba(20,16,42,.6);border:1px solid rgba(255,255,255,.25);border-radius:999px;padding:.4rem .8rem;text-decoration:none;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+  .demo-nav a.cur{background:var(--violet);border-color:var(--violet)}
+
+  .test-tag{position:fixed;top:1.1rem;right:1.2rem;z-index:100;font-size:.6rem;letter-spacing:.3em;text-transform:uppercase;color:var(--lilac);border:1px solid rgba(167,147,242,.4);border-radius:999px;padding:.45rem .9rem}
+
+  /* ---------- ТЕСТ 1: буквы слетаются ---------- */
+  .letters{height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;overflow:hidden}
+  .letters .word{font-family:'Unbounded',sans-serif;font-weight:300;font-size:clamp(3rem,10vw,7.5rem);letter-spacing:.08em;display:flex}
+  .letters .word span{display:inline-block;will-change:transform}
+  .letters .word span:last-child{color:var(--lilac)}
+  .letters .cap{margin-top:2rem;font-size:.68rem;letter-spacing:.4em;text-transform:uppercase;color:rgba(245,243,251,.55)}
+  .letters .hint{margin-top:4rem;font-size:.62rem;letter-spacing:.3em;text-transform:uppercase;color:rgba(255,255,255,.4)}
+  .replay{margin-top:1.6rem;font-family:inherit;font-size:.75rem;font-weight:600;color:#fff;background:transparent;border:1px solid rgba(255,255,255,.35);border-radius:999px;padding:.7rem 1.6rem;cursor:pointer;transition:all .25s}
+  .replay:hover{border-color:var(--lilac);color:var(--lilac)}
+
+  /* ---------- ТЕСТ 2: пазл ---------- */
+  .puzzle-sec{position:relative;padding:8rem 1.5rem}
+  .puzzle-head{text-align:center;margin-bottom:3.5rem}
+  .puzzle-head .eyebrow{font-size:.68rem;letter-spacing:.4em;text-transform:uppercase;color:var(--lilac);margin-bottom:1rem}
+  .puzzle-head h2{font-size:clamp(1.5rem,3vw,2.5rem)}
+  .puzzle{
+    --cols:6; --rows:4;
+    max-width:960px;margin:0 auto;aspect-ratio:3/2;
+    display:grid;grid-template-columns:repeat(var(--cols),1fr);grid-template-rows:repeat(var(--rows),1fr);
+    gap:0;border-radius:1.1rem;overflow:visible;
+  }
+  .puzzle .tile{
+    background-image:url('img/metafora.jpg');background-size:calc(var(--cols)*100%) calc(var(--rows)*100%);
+    will-change:transform,opacity;
+  }
+  .puzzle-note{text-align:center;margin-top:2.6rem;font-size:.8rem;color:rgba(245,243,251,.6)}
+
+  .tail{height:60vh;display:flex;align-items:center;justify-content:center;color:rgba(245,243,251,.5);font-size:.8rem}
+
+  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition-duration:.01s!important}}
+</style>
+</head>
+<body>
+
+<nav class="demo-nav">
+  <a href="a-dva-mira.html">А · Два мира</a>
+  <a href="b-znak.html">Б · Знак</a>
+  <a href="c-sutki.html">В · Сутки</a>
+  <a class="cur" href="d-formations.html">Тест · Формации</a>
+  <a href="f-kino.html">Кино</a>
+  <a href="index.html">← превью</a>
+</nav>
+<div class="test-tag">Тестовый стенд</div>
+
+<!-- ТЕСТ 1: буквы -->
+<section class="letters">
+  <div>
+    <div class="word display" id="word" aria-label="Символ">
+      <span>С</span><span>И</span><span>М</span><span>В</span><span>О</span><span>Л</span>
+    </div>
+    <div class="cap">Тест 1 · буквы слетаются в слово</div>
+    <button class="replay" id="replay">Повторить сборку</button>
+    <div class="hint">Ниже — сборка картинки из пазла по скроллу</div>
+  </div>
+</section>
+
+<!-- ТЕСТ 2: пазл -->
+<section class="puzzle-sec">
+  <div class="puzzle-head">
+    <p class="eyebrow">Тест 2 · пазл</p>
+    <h2 class="display">Рендер собирается<br>по мере скролла</h2>
+  </div>
+  <div class="puzzle" id="puzzle"></div>
+  <p class="puzzle-note">Секция «прилипает», плитки слетаются в кадр, пока крутится колесо. Держите скролл медленно — соберётся у вас на глазах.</p>
+</section>
+
+<div class="tail">Конец теста · вернуться: переключалка слева внизу</div>
+
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.18/dist/lenis.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+<script>
+(function(){
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const hasLibs = typeof gsap !== 'undefined';
+
+  /* --- генерируем плитки пазла --- */
+  const puzzle = document.getElementById('puzzle');
+  const COLS = 6, ROWS = 4;
+  for (let r = 0; r < ROWS; r++){
+    for (let c = 0; c < COLS; c++){
+      const t = document.createElement('div');
+      t.className = 'tile';
+      t.style.backgroundPosition = `${c/(COLS-1)*100}% ${r/(ROWS-1)*100}%`;
+      puzzle.appendChild(t);
+    }
+  }
+  const tiles = [...puzzle.children];
+
+  if (hasLibs && !reduced){
+    gsap.registerPlugin(ScrollTrigger);
+    const lenis = new Lenis({ lerp:.1 });
+    lenis.on('scroll', ScrollTrigger.update);
+    gsap.ticker.add(t=>lenis.raf(t*1000));
+    gsap.ticker.lagSmoothing(0);
+
+    /* ТЕСТ 1: буквы слетаются при загрузке (и по кнопке) */
+    const letters = document.querySelectorAll('#word span');
+    function assemble(){
+      gsap.fromTo(letters,
+        { x:()=>gsap.utils.random(-600,600), y:()=>gsap.utils.random(-320,320),
+          rotation:()=>gsap.utils.random(-140,140), opacity:0, scale:.4 },
+        { x:0, y:0, rotation:0, opacity:1, scale:1,
+          duration:1.4, stagger:.07, ease:'expo.out' });
+    }
+    assemble();
+    document.getElementById('replay').addEventListener('click', assemble);
+
+    /* ТЕСТ 2: пазл собирается в pinned-сцене по скраба */
+    gsap.set(tiles, {
+      x:()=>gsap.utils.random(-700,700), y:()=>gsap.utils.random(-450,450),
+      rotation:()=>gsap.utils.random(-120,120), opacity:0, scale:.5
+    });
+    gsap.to(tiles, {
+      x:0, y:0, rotation:0, opacity:1, scale:1,
+      stagger:{ each:.02, from:'random' }, ease:'power2.inOut',
+      scrollTrigger:{ trigger:'.puzzle-sec', start:'top top', end:'+=160%', pin:true, scrub:1 }
+    });
+  } else {
+    /* фолбэк: всё на местах */
+    document.querySelectorAll('#word span').forEach(s=>{ s.style.opacity=1; });
+  }
+})();
+</script>
+</body>
+</html>

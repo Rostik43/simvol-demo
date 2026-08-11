@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Символ · Скролл-кино (видео управляется скроллом)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@200;300;400&family=Onest:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{ --night:#14102A; --violet:#6C57C9; --lilac:#A793F2; --glow:#D9CCF5 }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:'Onest',sans-serif;background:#0B0817;color:#fff;overflow-x:hidden}
+  .d{font-family:'Unbounded',sans-serif;font-weight:300;letter-spacing:-.015em}
+
+  .back{position:fixed;bottom:1rem;left:1rem;z-index:100;font-size:.68rem}
+  .back a{color:#fff;background:rgba(20,16,42,.6);border:1px solid rgba(255,255,255,.25);border-radius:999px;padding:.4rem .9rem;text-decoration:none;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+
+  /* прелоадер кадров */
+  .ldr{position:fixed;inset:0;z-index:200;background:#0B0817;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1.2rem;transition:opacity .7s,visibility .7s}
+  .ldr.done{opacity:0;visibility:hidden}
+  .ldr .pct{font-family:'Unbounded',sans-serif;font-weight:200;font-size:2.4rem;color:var(--glow)}
+  .ldr .cap{font-size:.68rem;letter-spacing:.34em;text-transform:uppercase;color:rgba(245,243,251,.5)}
+
+  .logo{position:fixed;top:1.2rem;left:50%;transform:translateX(-50%);z-index:90;font-family:'Unbounded',sans-serif;font-weight:400;font-size:.95rem;letter-spacing:.3em;text-transform:uppercase}
+  .logo span{color:var(--lilac)}
+
+  /* интро */
+  .intro{height:88vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:0 1.5rem}
+  .intro h1{font-size:clamp(1.7rem,4vw,3.2rem);line-height:1.2}
+  .intro p{margin-top:1.1rem;font-size:.9rem;color:rgba(245,243,251,.65);max-width:44ch}
+  .intro .hint{margin-top:3rem;font-size:.62rem;letter-spacing:.34em;text-transform:uppercase;color:rgba(255,255,255,.45);animation:pulse 2.4s ease-in-out infinite}
+  @keyframes pulse{0%,100%{opacity:.45}50%{opacity:1}}
+
+  /* сцена кино */
+  .film{position:relative;height:100vh}
+  .film canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+  .film .shade{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(11,8,23,.45),transparent 30%,transparent 70%,rgba(11,8,23,.55));pointer-events:none}
+  /* титры */
+  .cap-card{position:absolute;z-index:5;opacity:0;transform:translateY(24px);max-width:34ch}
+  .cap-card .t{font-family:'Unbounded',sans-serif;font-weight:300;font-size:clamp(1.3rem,2.8vw,2.2rem);line-height:1.25}
+  .cap-card .s{margin-top:.6rem;font-size:.85rem;color:rgba(245,243,251,.75);line-height:1.55}
+  .cap-card.c1{left:6%;top:18%}
+  .cap-card.c2{right:6%;top:22%;text-align:right}
+  .cap-card.c3{left:6%;bottom:16%}
+  .cap-card.c4{left:50%;top:50%;transform:translate(-50%,-40%);text-align:center;max-width:none}
+  .cap-card.c4 .t{font-size:clamp(1.8rem,4vw,3.2rem)}
+  .cap-card .cta{display:inline-block;margin-top:1.4rem;font-size:.85rem;font-weight:600;color:#fff;background:var(--violet);border-radius:999px;padding:1rem 2.2rem;text-decoration:none;transition:background .3s,transform .3s}
+  .cap-card .cta:hover{background:#5A45B5;transform:translateY(-2px)}
+  .prog{position:absolute;right:1.4rem;top:50%;transform:translateY(-50%);z-index:6;width:2px;height:120px;background:rgba(255,255,255,.15);border-radius:2px}
+  .prog i{display:block;width:100%;height:0%;background:var(--lilac);border-radius:2px}
+
+  .outro{height:70vh;display:flex;align-items:center;justify-content:center;text-align:center;padding:0 1.5rem}
+  .outro p{font-size:.85rem;color:rgba(245,243,251,.55);max-width:52ch;line-height:1.7}
+
+  @media (max-width:900px){
+    .cap-card.c1,.cap-card.c3{left:1.2rem;right:1.2rem}
+    .cap-card.c2{right:1.2rem;left:1.2rem;text-align:left}
+  }
+</style>
+</head>
+<body>
+
+<div class="ldr" id="ldr"><div class="pct" id="pct">0%</div><div class="cap">Загружаем кино</div></div>
+<div class="back"><a href="index.html">← к превью и концепциям</a></div>
+<div class="logo">Симво<span>л</span></div>
+
+<section class="intro">
+  <div>
+    <h1 class="d">Подъём, которым<br>управляете вы</h1>
+    <p>Ниже — настоящая съёмка Леонова, которой управляет ваш скролл. Крутите медленно: камера поднимается по фасаду вместе с вами.</p>
+    <div class="hint">Скрольте — и смотрите</div>
+  </div>
+</section>
+
+<section class="film" id="film">
+  <canvas id="cv"></canvas>
+  <div class="shade"></div>
+  <div class="cap-card c1" id="cap1">
+    <div class="t d">Леонов</div>
+    <div class="s">Квартал героев. Не рендер — живая съёмка, июнь 2026.</div>
+  </div>
+  <div class="cap-card c2" id="cap2">
+    <div class="t d">Кирпич, который не стареет</div>
+    <div class="s">Клинкерный фасад и панорамные окна — дом, который через 20 лет будет выглядеть достойнее соседей.</div>
+  </div>
+  <div class="cap-card c3" id="cap3">
+    <div class="t d">Выше — только небо</div>
+    <div class="s">Скролл поднял вас на шестнадцать этажей. Вид отсюда может стать вашим.</div>
+  </div>
+  <div class="cap-card c4" id="cap4">
+    <div class="t d">Досмотрели до конца?<br>Теперь выберите свой этаж</div>
+    <a class="cta" href="index.html#lead">Выбрать квартиру</a>
+  </div>
+  <div class="prog"><i id="progBar"></i></div>
+</section>
+
+<section class="outro">
+  <p>Технически: живая съёмка фасада Леонова (июнь 2026), раскадрованная на 63 кадра — скролл листает их через canvas. На боевом сайте так можно «оживить» каждый проект: у Символа уже снята видеотека по всем ЖК.</p>
+</section>
+
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.18/dist/lenis.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+<script>
+(function(){
+  const FRAMES = 63;
+  const SRC = i => 'seq/f_' + String(i + 1).padStart(3, '0') + '.jpg';
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const cv = document.getElementById('cv');
+  const ctx = cv.getContext('2d');
+  const ldr = document.getElementById('ldr'), pct = document.getElementById('pct');
+
+  /* --- загрузка кадров с прогрессом --- */
+  const imgs = [];
+  let loaded = 0;
+  function onOne(){
+    loaded++;
+    pct.textContent = Math.round(loaded / FRAMES * 100) + '%';
+    if (loaded === FRAMES) start();
+  }
+  for (let i = 0; i < FRAMES; i++){
+    const im = new Image();
+    im.onload = onOne;
+    im.onerror = onOne; /* битый кадр не блокирует запуск */
+    im.src = SRC(i);
+    imgs.push(im);
+  }
+
+  /* --- отрисовка кадра (cover) --- */
+  let cur = 0;
+  function resize(){
+    cv.width = cv.clientWidth * Math.min(devicePixelRatio || 1, 2);
+    cv.height = cv.clientHeight * Math.min(devicePixelRatio || 1, 2);
+    draw(cur);
+  }
+  function draw(i){
+    cur = i;
+    const im = imgs[i];
+    if (!im || !im.naturalWidth || !cv.width) return;
+    const cw = cv.width, chh = cv.height;
+    const ir = im.naturalWidth / im.naturalHeight, cr = cw / chh;
+    let w, h, x, y;
+    if (ir > cr){ h = chh; w = h * ir; x = (cw - w) / 2; y = 0; }
+    else { w = cw; h = w / ir; x = 0; y = (chh - h) / 2; }
+    ctx.drawImage(im, x, y, w, h);
+  }
+  addEventListener('resize', resize);
+
+  function start(){
+    ldr.classList.add('done');
+    resize();
+
+    if (typeof gsap === 'undefined'){ draw(0); return; }
+    gsap.registerPlugin(ScrollTrigger);
+
+    if (!reduced && typeof Lenis !== 'undefined'){
+      const lenis = new Lenis({ lerp:.1 });
+      lenis.on('scroll', ScrollTrigger.update);
+      gsap.ticker.add(t=>lenis.raf(t*1000));
+      gsap.ticker.lagSmoothing(0);
+    }
+
+    /* сцена: пин на 350% скролла, кадр = прогресс */
+    const frameObj = { f: 0 };
+    ScrollTrigger.create({
+      trigger: '#film', start: 'top top', end: '+=350%', pin: true, scrub: .5,
+      onUpdate(self){
+        const f = Math.min(FRAMES - 1, Math.round(self.progress * (FRAMES - 1)));
+        if (f !== frameObj.f){ frameObj.f = f; draw(f); }
+        document.getElementById('progBar').style.height = (self.progress * 100) + '%';
+        /* титры по диапазонам прогресса */
+        setCap('cap1', self.progress, .02, .24);
+        setCap('cap2', self.progress, .30, .52);
+        setCap('cap3', self.progress, .58, .80);
+        setCap('cap4', self.progress, .86, 1.01);
+      }
+    });
+    function setCap(id, p, a, b){
+      const el = document.getElementById(id);
+      const inRange = p >= a && p <= b;
+      el.style.transition = 'opacity .5s, transform .5s';
+      el.style.opacity = inRange ? 1 : 0;
+      const baseTf = id === 'cap4' ? 'translate(-50%,-40%)' : '';
+      el.style.transform = baseTf + (inRange ? ' translateY(0)' : ' translateY(24px)');
+    }
+    draw(0);
+  }
+})();
+</script>
+</body>
+</html>
