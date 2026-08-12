@@ -29,6 +29,7 @@
   }
   *{margin:0;padding:0;box-sizing:border-box}
   a,button,input,select,textarea,label{touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+  section[id],footer[id]{scroll-margin-top:4.5rem}
   html{scroll-behavior:auto}
   body{font-family:'Jost',sans-serif;background:var(--mist);color:var(--ink);overflow-x:hidden}
   h1,h2,h3{font-weight:500}
@@ -249,6 +250,32 @@
   .map-bg{position:absolute;inset:0;width:100%;height:100%}
   .mgroup{position:absolute;inset:0;transition:opacity .5s}
   .mgroup.hidden{opacity:0;pointer-events:none}
+
+  /* --- обзор «Россия»: стартовое состояние панели карты --- */
+  .mru{position:absolute;inset:0;z-index:4;opacity:0;pointer-events:none;transition:opacity .55s ease;display:grid;place-items:center;padding:1.2rem}
+  /* фиксированный аспект: проценты спотов совпадают с координатами SVG на любом экране */
+  .mru-in{position:relative;aspect-ratio:1200/620;width:100%;max-height:100%}
+  .mru-in svg{width:100%;height:100%;display:block}
+  /* крайние споты (Крым у кромки карты): подпись сбоку, а не снизу */
+  .ru-spot.edge{flex-direction:row;align-items:center;gap:.55rem;transform:translate(-12px,-50%)}
+  .ru-spot.edge .rp{margin-bottom:0}
+  .ru-spot.edge b{order:1}
+  .ru-spot.edge i{order:2;margin-left:.2rem}
+  .map-panel.ru .mru{opacity:1;pointer-events:auto}
+  .map-panel.ru .mgroup{opacity:0;pointer-events:none}
+  .map-panel.ru .map-bg{opacity:.25}
+  .ru-spot{position:absolute;transform:translate(-50%,-50%);background:none;border:none;color:#fff;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:.15rem;font-family:'Jost',sans-serif;padding:.4rem}
+  .ru-spot b{font-size:.88rem;font-weight:600;letter-spacing:.04em;text-shadow:0 1px 10px rgba(10,1,64,.8)}
+  .ru-spot i{font-style:normal;font-size:.68rem;color:var(--glow);opacity:.85}
+  .ru-spot .rp{width:16px;height:16px;border-radius:50%;background:var(--glow);position:relative;margin-bottom:.35rem;box-shadow:0 0 18px rgba(217,204,245,.9)}
+  .ru-spot .rp::after{content:"";position:absolute;inset:-9px;border-radius:50%;border:1.5px solid rgba(217,204,245,.55);animation:ruPulse 2.2s ease-out infinite}
+  @keyframes ruPulse{0%{transform:scale(.6);opacity:1}100%{transform:scale(1.7);opacity:0}}
+  .ru-spot:hover .rp{background:#fff}
+  .ru-cap{position:absolute;left:0;right:0;bottom:1.1rem;text-align:center;font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;color:rgba(245,243,251,.5);pointer-events:none}
+  .ru-back{position:absolute;top:.9rem;left:.9rem;z-index:6;font-family:'Jost',sans-serif;font-size:.75rem;font-weight:600;color:#fff;background:rgba(17,1,99,.55);border:1px solid rgba(255,255,255,.25);border-radius:999px;padding:.5rem 1rem;cursor:pointer;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);transition:background .25s}
+  .ru-back:hover{background:var(--violet)}
+  .map-panel.ru .ru-back{display:none}
+  @media(max-width:700px){.ru-spot b{font-size:.78rem}.ru-cap{font-size:.62rem;letter-spacing:.12em;padding:0 1rem}}
   .marker{position:absolute;width:20px;height:20px;background:none;border:none;padding:0;cursor:pointer;transform:translate(-50%,-50%)}
   .marker .dot{position:absolute;inset:5px;border-radius:50%;background:var(--lilac);box-shadow:0 0 14px rgba(168,121,232,.85)}
   .marker .pulse{position:absolute;inset:-7px;border-radius:50%;border:1px solid rgba(168,121,232,.6);animation:mpulse 2.4s ease-out infinite}
@@ -285,16 +312,20 @@
 
   /* ---------- СДАНО В СРОК ---------- */
   .done-sec{padding:6.5rem 0;background:var(--mist)}
-  .done-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.3rem;margin-top:2.8rem}
+  .done-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:1.1rem;margin-top:2.8rem}
   .dcard{position:relative;border-radius:1.1rem;overflow:hidden;aspect-ratio:4/5}
-  .dcard img{width:100%;height:100%;object-fit:cover;transition:transform .7s cubic-bezier(.2,.6,.2,1)}
+  /* 50% 30%: в кадрах с людьми лица в верхней трети — центр-кроп резал головы */
+  .dcard img{width:100%;height:100%;object-fit:cover;object-position:50% 30%;transition:transform .7s cubic-bezier(.2,.6,.2,1)}
+  /* сданные дома без фотосессии: фирменный градиент со знаком */
+  .dcard.plain{background:linear-gradient(155deg,#110163,#310382 62%,#5703AC)}
+  .dcard.plain::before{content:"";position:absolute;right:-18%;bottom:-14%;width:75%;aspect-ratio:1;background:url('img/brand/znak-white.png') center/contain no-repeat;opacity:.1;transform:rotate(-8deg)}
   .dcard:hover img{transform:scale(1.05)}
   .dcard::after{content:"";position:absolute;inset:0;background:linear-gradient(to top,rgba(10,1,64,.72),transparent 55%)}
   .dcard .bd{position:absolute;left:1.3rem;right:1.3rem;bottom:1.2rem;z-index:2;color:#fff}
   .dcard .bd b{font-family:'Bounded',sans-serif;font-weight:400;font-size:1.05rem;display:block}
   .dcard .bd span{font-size:.78rem;opacity:.85}
   .dbadge{position:absolute;top:1rem;left:1rem;z-index:2;font-size:.62rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;background:#fff;color:#2E7D46;border-radius:999px;padding:.4rem .85rem}
-  @media(max-width:900px){.done-grid{grid-template-columns:1fr}.dcard{aspect-ratio:3/2}}
+  @media(max-width:900px){.done-grid{grid-template-columns:1fr}.dcard{aspect-ratio:3/2}.dcard.plain{aspect-ratio:3/1.35}}
 
   /* ---------- ЦЕННОСТИ ---------- */
   .values{padding:6.5rem 0;background:var(--paper)}
@@ -346,6 +377,8 @@
   .door .arrow{position:absolute;top:1.2rem;right:1.2rem;width:38px;height:38px;border-radius:50%;border:1px solid rgba(255,255,255,.45);display:grid;place-items:center;transition:background .25s,transform .25s}
   .door:hover .arrow{background:rgba(255,255,255,.15);transform:translate(2px,-2px)}
   @media(max-width:900px){.doors-grid{grid-template-columns:1fr}}
+  /* выбранный мир ведёт: при «Море» морская дверь поднимается первой */
+  body.sea .doors-grid .door:nth-child(2){order:-1}
 
   /* ---------- КАЛЬКУЛЯТОР ---------- */
   .calc{padding:6.5rem 0;background:var(--paper)}
@@ -447,6 +480,8 @@
     .fan-back .t{text-align:left;padding:0;font-size:.72rem}
     .fan-back .s{font-size:.66rem}
     .fan-nav{display:none}
+    /* при выбранном «Море» крымские проекты первыми в ленте */
+    body.sea .fan-card[data-city="crimea"]{order:-1}
   }
 
   /* ---------- МЕЛКИЕ ЭКРАНЫ: читаемость и тап-зоны ---------- */
@@ -483,7 +518,7 @@
   }
 </style>
 </head>
-<body data-build="2026-08-12.6">
+<body data-build="2026-08-12.7">
 <script>console.log('СИМВОЛ превью · сборка', document.body.dataset.build);</script>
 
 <div class="ldr" id="pageLdr" aria-hidden="true">
@@ -546,7 +581,7 @@
       </div>
     </div>
     <div class="hero-actions">
-      <a class="btn btn-fill btn-nest" href="#lead">Выбрать квартиру <span class="btn-ico">↗</span></a>
+      <a class="btn btn-fill btn-nest" href="#lead">Выбрать квартиру <span class="btn-ico"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></span></a>
       <a class="btn btn-ghost" href="#projects">Смотреть проекты</a>
     </div>
   </div>
@@ -560,17 +595,17 @@
     <div class="doors-grid">
       <a class="door reveal" href="#projects">
         <img src="img/real-leonov.jpg" alt="" loading="lazy">
-        <span class="arrow">→</span>
+        <span class="arrow"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
         <div class="d-txt"><b>Хочу жить в Ижевске</b><span>Метафора, Леонов, Монблан — кварталы у пруда</span></div>
       </a>
       <a class="door reveal" href="#map">
         <img src="img/real-sok.jpg" alt="" loading="lazy">
-        <span class="arrow">→</span>
+        <span class="arrow"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
         <div class="d-txt"><b>Хочу к морю</b><span>СОК, Ласка, Высота — Крым, первая линия жизни</span></div>
       </a>
       <a class="door reveal" href="#calc">
         <img src="img/real-monblan.jpg" alt="" loading="lazy">
-        <span class="arrow">→</span>
+        <span class="arrow"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
         <div class="d-txt"><b>Инвестирую</b><span>Цены от застройщика, рост к сдаче, честные сроки</span></div>
       </a>
     </div>
@@ -593,11 +628,11 @@
         <div class="fan-card" tabindex="0"><div class="fan-inner"><div class="fan-face"><img src="img/real-metafora.jpg" alt="Метафора" loading="lazy"></div><div class="fan-face fan-back"><span class="t">Метафора</span><span class="s">Смотреть</span></div></div></div>
         <div class="fan-card" tabindex="0"><div class="fan-inner"><div class="fan-face"><img src="img/real-leonov.jpg" alt="Леонов" loading="lazy"></div><div class="fan-face fan-back"><span class="t">Леонов</span><span class="s">Смотреть</span></div></div></div>
         <div class="fan-card" tabindex="0"><div class="fan-inner"><div class="fan-face"><img src="img/real-monblan.jpg" alt="Монблан" loading="lazy"></div><div class="fan-face fan-back"><span class="t">Монблан</span><span class="s">Смотреть</span></div></div></div>
-        <div class="fan-card" tabindex="0"><div class="fan-inner"><div class="fan-face"><img src="img/real-sok.jpg" alt="СОК" loading="lazy"></div><div class="fan-face fan-back"><span class="t">СОК</span><span class="s">Смотреть</span></div></div></div>
+        <div class="fan-card" data-city="crimea" tabindex="0"><div class="fan-inner"><div class="fan-face"><img src="img/real-sok.jpg" alt="СОК" loading="lazy"></div><div class="fan-face fan-back"><span class="t">СОК</span><span class="s">Смотреть</span></div></div></div>
         <div class="fan-card" tabindex="0"><div class="fan-inner"><div class="fan-face"><img src="img/dvor.jpg" alt="Дворы" loading="lazy"></div><div class="fan-face fan-back"><span class="t">Дворы без машин</span><span class="s">Среда</span></div></div></div>
-        <div class="fan-card" tabindex="0"><div class="fan-inner"><div class="fan-face"><img src="img/laska.jpg" alt="Ласка" loading="lazy"></div><div class="fan-face fan-back"><span class="t">Ласка</span><span class="s">Смотреть</span></div></div></div>
+        <div class="fan-card" data-city="crimea" tabindex="0"><div class="fan-inner"><div class="fan-face"><img src="img/laska.jpg" alt="Ласка" loading="lazy"></div><div class="fan-face fan-back"><span class="t">Ласка</span><span class="s">Смотреть</span></div></div></div>
         <div class="fan-card" tabindex="0"><div class="fan-inner"><div class="fan-face"><img src="img/lobby.jpg" alt="Лобби" loading="lazy"></div><div class="fan-face fan-back"><span class="t">Лобби</span><span class="s">Среда</span></div></div></div>
-        <div class="fan-card" tabindex="0"><div class="fan-inner"><div class="fan-face"><img src="img/vysota.jpg" alt="Высота" loading="lazy"></div><div class="fan-face fan-back"><span class="t">Высота</span><span class="s">Смотреть</span></div></div></div>
+        <div class="fan-card" data-city="crimea" tabindex="0"><div class="fan-inner"><div class="fan-face"><img src="img/vysota.jpg" alt="Высота" loading="lazy"></div><div class="fan-face fan-back"><span class="t">Высота</span><span class="s">Смотреть</span></div></div></div>
         <div class="fan-card" tabindex="0"><div class="fan-inner"><div class="fan-face"><img src="img/real.jpg" alt="Сдано" loading="lazy"></div><div class="fan-face fan-back"><span class="t">Сдано · 2024</span><span class="s">Реализовано</span></div></div></div>
       </div>
     </div>
@@ -609,7 +644,7 @@
         <div class="pcard-body">
           <h3>Метафора</h3>
           <p class="tagline">Новый уровень жизни</p>
-          <div class="meta"><span class="price">от 5,2 млн ₽</span><span class="arrow">→</span></div>
+          <div class="meta"><span class="price">от 5,2 млн ₽</span><span class="arrow"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></div>
         </div>
       </a>
       <a class="pcard reveal" href="#">
@@ -618,7 +653,7 @@
         <div class="pcard-body">
           <h3>Леонов</h3>
           <p class="tagline">Квартал героев</p>
-          <div class="meta"><span class="price">от 4,8 млн ₽</span><span class="arrow">→</span></div>
+          <div class="meta"><span class="price">от 4,8 млн ₽</span><span class="arrow"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></div>
         </div>
       </a>
       <a class="pcard reveal" href="#">
@@ -627,7 +662,7 @@
         <div class="pcard-body">
           <h3>Монблан</h3>
           <p class="tagline">Дом большого города</p>
-          <div class="meta"><span class="price">от 6,1 млн ₽</span><span class="arrow">→</span></div>
+          <div class="meta"><span class="price">от 6,1 млн ₽</span><span class="arrow"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></div>
         </div>
       </a>
       <a class="pcard reveal" href="#">
@@ -636,7 +671,7 @@
         <div class="pcard-body">
           <h3>СОК</h3>
           <p class="tagline">Квартал у самого моря</p>
-          <div class="meta"><span class="price">от 7,4 млн ₽</span><span class="arrow">→</span></div>
+          <div class="meta"><span class="price">от 7,4 млн ₽</span><span class="arrow"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></div>
         </div>
       </a>
       <a class="pcard reveal" href="#">
@@ -645,7 +680,7 @@
         <div class="pcard-body">
           <h3>Ласка</h3>
           <p class="tagline">Террасы над морем</p>
-          <div class="meta"><span class="price">от 8,1 млн ₽</span><span class="arrow">→</span></div>
+          <div class="meta"><span class="price">от 8,1 млн ₽</span><span class="arrow"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></div>
         </div>
       </a>
       <a class="pcard reveal" href="#">
@@ -654,7 +689,7 @@
         <div class="pcard-body">
           <h3>Высота</h3>
           <p class="tagline">Город и море с высоты</p>
-          <div class="meta"><span class="price">цена по запросу</span><span class="arrow">→</span></div>
+          <div class="meta"><span class="price">цена по запросу</span><span class="arrow"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></div>
         </div>
       </a>
     </div>
@@ -690,6 +725,8 @@
       <div class="dcard reveal"><span class="dbadge">Сдан в срок</span><img src="img/gagarin-real.jpg" alt="Гагарин" loading="lazy"><div class="bd"><b>Гагарин</b><span>Ижевск · заселён</span></div></div>
       <div class="dcard reveal"><span class="dbadge">Сдан в срок</span><img src="img/lomonosov-real.jpg" alt="Ломоносов" loading="lazy"><div class="bd"><b>Ломоносов</b><span>Ижевск · заселён</span></div></div>
       <div class="dcard reveal"><span class="dbadge">Сдан в срок</span><img src="img/real-monblan.jpg" alt="Монблан" loading="lazy"><div class="bd"><b>Монблан</b><span>Ижевск · сдан в 2024</span></div></div>
+      <div class="dcard plain reveal"><span class="dbadge">Сдан в срок</span><div class="bd"><b>Матросов</b><span>Ижевск · сдан в 2022</span></div></div>
+      <div class="dcard plain reveal"><span class="dbadge">Сдан в срок</span><div class="bd"><b>Чкалов</b><span>Ижевск · сдан в 2021</span></div></div>
     </div>
   </div>
 </section>
@@ -698,7 +735,7 @@
 <section class="values">
   <div class="container">
     <p class="eyebrow reveal">Ценности</p>
-    <h2 class="section-title display">Строим то, что ценно</h2>
+    <h2 class="section-title display">Что мы вкладываем<br>в каждый дом</h2>
     <div class="vgrid">
       <div class="vc reveal"><span class="no">01</span><b>Надёжность</b><p>Каждый проект доводим до результата: пять сданных домов — все в срок. Гагарин, Ломоносов, Матросов, Чкалов, Монблан уже живут.</p></div>
       <div class="vc reveal"><span class="no">02</span><b>Развитие</b><p>Выходим за пределы регионов и стандартов: начали с кварталов у пруда — строим террасы над Чёрным морем.</p></div>
@@ -713,7 +750,7 @@
 <section class="stats dark">
   <div class="container">
     <p class="eyebrow reveal">Символ в цифрах</p>
-    <h2 class="section-title display reveal">Строим репутацию<br>дом за домом</h2>
+    <h2 class="section-title display reveal">Дома, которые<br>говорят за нас</h2>
     <div class="stats-grid">
       <div class="stat reveal"><div class="num"><span data-count="2">0</span></div><div class="cap">региона: Удмуртия и Крым</div></div>
       <div class="stat reveal"><div class="num"><span data-count="5">0</span><small>+</small></div><div class="cap">лет опыта в девелопменте</div></div>
@@ -733,7 +770,7 @@
     <h2 class="section-title display">Проекты на карте</h2>
     <div class="map-controls reveal">
       <div class="map-cities">
-        <button class="mchip active" data-city="izh">Ижевск</button>
+        <button class="mchip" data-city="izh">Ижевск</button>
         <button class="mchip" data-city="crimea">Крым</button>
       </div>
       <div class="map-filters">
@@ -742,7 +779,38 @@
         <button class="fchip" data-f="done">Сданы</button>
       </div>
     </div>
-    <div class="map-panel reveal" id="mapPanel">
+    <div class="map-panel ru reveal" id="mapPanel">
+      <!-- обзор: стилизованная Россия, два региона присутствия -->
+      <div class="mru" id="mapRu" aria-hidden="false">
+        <div class="mru-in">
+          <svg viewBox="0 0 1200 620" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+            <defs>
+              <linearGradient id="ruFill" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0" stop-color="rgba(87,3,172,.16)"/>
+                <stop offset="1" stop-color="rgba(17,1,99,.10)"/>
+              </linearGradient>
+              <filter id="ruGlow" x="-20%" y="-20%" width="140%" height="140%">
+                <feGaussianBlur stdDeviation="5" result="b"/>
+                <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+              </filter>
+            </defs>
+            <path id="ruPath" fill="url(#ruFill)" stroke="#A879E8" stroke-width="2" stroke-linejoin="round" opacity=".9" filter="url(#ruGlow)"
+              d="M135,335 L140,290 L160,225 L185,170 L235,158 L245,192 L215,205 L300,195 L340,160 L390,175 L470,110 L500,145 L540,120 L565,152 L630,85 L690,130 L765,105 L850,112 L950,90 L1070,65 L1150,78 L1120,122 L1090,150 L1120,180 L1105,280 L1085,350 L1075,270 L1060,200 L990,190 L950,212 L900,252 L890,340 L860,430 L770,400 L700,410 L640,420 L545,425 L470,440 L375,425 L295,430 L245,438 L220,460 L185,472 L155,462 L130,470 L122,455 L138,442 L128,400 Z"/>
+            <!-- Калининград -->
+            <circle cx="75" cy="350" r="7" fill="rgba(168,121,232,.35)" stroke="#A879E8" stroke-width="1.5"/>
+            <!-- маршрут компании: Ижевск → Крым -->
+            <path d="M270,360 C235,430 185,455 132,464" stroke="#D9CCF5" stroke-width="2" stroke-dasharray="2 7" stroke-linecap="round" fill="none" opacity=".85"/>
+          </svg>
+          <button class="ru-spot" data-city="izh" style="left:22.5%;top:58%">
+            <span class="rp"></span><b>Ижевск</b><i>6 проектов</i>
+          </button>
+          <button class="ru-spot edge" data-city="crimea" style="left:9.8%;top:77.4%">
+            <span class="rp"></span><b>Крым</b><i>3 проекта</i>
+          </button>
+        </div>
+        <p class="ru-cap">Два берега одной компании — выберите регион</p>
+      </div>
+      <button class="ru-back" id="ruBack" type="button">← Вся Россия</button>
       <svg class="map-bg" viewBox="0 0 1200 620" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
         <rect width="1200" height="620" fill="#120D2B"/>
         <g stroke="#1B1540" stroke-width="1">
@@ -984,6 +1052,8 @@
     vCity.classList.toggle('on', !sea); vSea.classList.toggle('on', sea);
     if (sea){ vSea.play().catch(()=>{}); vCity.pause(); }
     else { vCity.play().catch(()=>{}); vSea.pause(); }
+    /* мир ведёт карту: «Море» → Крым, «Город» → Ижевск */
+    if (window.__mapShowCity) window.__mapShowCity(sea ? 'crimea' : 'izh');
   }
   if (bCity && bSea){
     bCity.addEventListener('click', () => setWorld(false));
@@ -1187,14 +1257,22 @@
     recalc();
   }
 
-  /* --- карта: города и фильтры --- */
+  /* --- карта: обзор России → город, фильтры --- */
   const mapPanel = document.getElementById('mapPanel');
   if (mapPanel){
     const groups = mapPanel.querySelectorAll('.mgroup');
-    document.querySelectorAll('.mchip').forEach(b=>b.addEventListener('click', ()=>{
-      document.querySelectorAll('.mchip').forEach(x=>x.classList.toggle('active', x===b));
-      groups.forEach(g=>g.classList.toggle('hidden', g.dataset.city !== b.dataset.city));
-    }));
+    function mapShowCity(city){
+      mapPanel.classList.remove('ru');
+      document.querySelectorAll('.mchip').forEach(x=>x.classList.toggle('active', x.dataset.city === city));
+      groups.forEach(g=>g.classList.toggle('hidden', g.dataset.city !== city));
+    }
+    window.__mapShowCity = mapShowCity;
+    document.querySelectorAll('.mchip').forEach(b=>b.addEventListener('click', ()=>mapShowCity(b.dataset.city)));
+    mapPanel.querySelectorAll('.ru-spot').forEach(b=>b.addEventListener('click', ()=>mapShowCity(b.dataset.city)));
+    document.getElementById('ruBack').addEventListener('click', ()=>{
+      mapPanel.classList.add('ru');
+      document.querySelectorAll('.mchip').forEach(x=>x.classList.remove('active'));
+    });
     document.querySelectorAll('.fchip').forEach(b=>b.addEventListener('click', ()=>{
       document.querySelectorAll('.fchip').forEach(x=>x.classList.toggle('active', x===b));
       const f = b.dataset.f;
