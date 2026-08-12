@@ -28,6 +28,7 @@
     --met:#6C57C9; --leo:#3E6FA8; --mon:#4A4A58; --sok:#2E8C8C; --las:#C98A57; --vys:#7A5476;
   }
   *{margin:0;padding:0;box-sizing:border-box}
+  a,button,input,select,textarea,label{touch-action:manipulation;-webkit-tap-highlight-color:transparent}
   html{scroll-behavior:auto}
   body{font-family:'Jost',sans-serif;background:var(--mist);color:var(--ink);overflow-x:hidden}
   h1,h2,h3{font-weight:500}
@@ -78,6 +79,8 @@
 
   /* ---------- HERO ---------- */
   .hero{height:100vh;min-height:640px;display:flex;flex-direction:column;justify-content:flex-end;overflow:hidden;color:#fff;background:#0A0140}
+  /* svh: на iPhone тулбар Safari съедает низ 100vh — svh меряет реально видимую высоту */
+  @supports (height:100svh){.hero{height:100svh}}
   .hero-visual{position:absolute;inset:0;will-change:transform}
   .hero-fallback{position:absolute;inset:-12%;background:
       radial-gradient(90% 70% at 78% 18%,rgba(87,3,172,.5),transparent 62%),
@@ -452,15 +455,35 @@
     .header.solid{padding:.7rem 1rem}
     .logo img{height:30px}
     .cta-mini{padding:.6rem 1rem;font-size:.72rem}
-    .hero .eyebrow{font-size:.68rem;letter-spacing:.16em;padding:.5rem .9rem}
-    .chip{font-size:.72rem}
+    .hero .eyebrow{font-size:.7rem;letter-spacing:.16em;padding:.5rem .9rem}
+    .chip{font-size:.74rem}
     .marker{width:34px;height:34px}
     .marker .dot{inset:12px}
     .marker .pulse{inset:0}
+
+    /* герой: компактный стек — первый экран целиком, кнопки не режутся.
+       padding-bottom возвращаем поверх шортката .container из блока 900px */
+    .hero .hero-content{padding-bottom:max(1.4rem, env(safe-area-inset-bottom))}
+    .hero h1{font-size:1.66rem}
+    .worlds{margin-bottom:1.1rem}
+    .worlds button{padding:.55rem 1.15rem}
+    .hero-actions{margin-top:1.5rem;gap:.6rem}
+    .hero-actions .btn{padding:.85rem 1.6rem;font-size:.8rem}
+
+    /* iOS принудительно зумит страницу при тапе в поле с текстом мельче 16px */
+    .lead-form input,.lead-form select{font-size:16px}
+
+    /* подписи ленты проектов — читаемый размер */
+    .fan-back .t{font-size:.78rem}
+    .fan-back .s{font-size:.7rem;letter-spacing:.16em}
+
+    /* пункты бургер-меню: полноценные тап-зоны */
+    .menu-ov nav{gap:.9rem}
+    .menu-ov a{padding:.55rem 0}
   }
 </style>
 </head>
-<body data-build="2026-08-12.5">
+<body data-build="2026-08-12.6">
 <script>console.log('СИМВОЛ превью · сборка', document.body.dataset.build);</script>
 
 <div class="ldr" id="pageLdr" aria-hidden="true">
