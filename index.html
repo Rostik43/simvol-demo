@@ -447,6 +447,33 @@
   .footer .cols a:hover{color:#fff}
   .footer .legal{border-top:1px solid rgba(255,255,255,.1);padding-top:1.6rem;max-width:900px}
 
+  /* ---------- СКРОЛЛ-КИНО ЛАСКИ: закат → звёзды ---------- */
+  .skino{position:relative;height:100vh;min-height:560px;background:#0B0817 url('img/laska-kino/poster.webp') center/cover no-repeat;overflow:hidden;color:#fff}
+  @supports (height:100svh){.skino{height:100svh}}
+  .skino canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+  .sk-shade{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(11,8,23,.42),transparent 30%,transparent 68%,rgba(11,8,23,.5));pointer-events:none}
+  .sk-load{position:absolute;left:50%;bottom:1.8rem;transform:translateX(-50%);width:180px;height:2px;background:rgba(255,255,255,.18);border-radius:2px;overflow:hidden;transition:opacity .5s;z-index:4}
+  .sk-load i{display:block;height:100%;width:0;background:var(--glow)}
+  .sk-load.done{opacity:0}
+  .sk-cap{position:absolute;z-index:3;opacity:0;transform:translateY(22px);transition:opacity .55s ease,transform .55s ease;pointer-events:none}
+  .sk-cap.on{opacity:1;transform:translateY(0);pointer-events:auto}
+  .sk-cap h2{font-size:clamp(1.6rem,3.4vw,2.9rem);line-height:1.22;color:#fff;text-shadow:0 2px 26px rgba(0,0,0,.5)}
+  .sk-cap h2 em{font-style:normal;color:var(--glow)}
+  .sk-cap .eyebrow{color:var(--glow);margin-bottom:.9rem}
+  .sk-cap.c1{left:6%;top:22%}
+  .sk-cap.c2{right:6%;top:26%;text-align:right}
+  .sk-cap.c3{left:50%;bottom:13%;transform:translate(-50%,22px);text-align:center}
+  .sk-cap.c3.on{transform:translate(-50%,0)}
+  .sk-cap.c3 .btn{margin-top:1.4rem;pointer-events:auto}
+  /* без анимаций: статичный постер и один заголовок */
+  .skino.no-motion canvas,.skino.no-motion .sk-load,.skino.no-motion .c2,.skino.no-motion .c3{display:none}
+  .skino.no-motion .c1{opacity:1;transform:none}
+  @media (max-width:700px){
+    .sk-cap.c1{left:1.3rem;right:1.3rem;top:18%}
+    .sk-cap.c2{left:1.3rem;right:1.3rem;top:auto;bottom:32%;text-align:left}
+    .sk-cap.c3{width:100%;padding:0 1.3rem}
+  }
+
   @media (prefers-reduced-motion:reduce){
     *,*::before,*::after{animation-duration:.01s!important;transition-duration:.01s!important}
     .reveal{opacity:1!important;transform:none!important}
@@ -518,7 +545,7 @@
   }
 </style>
 </head>
-<body data-build="2026-08-12.7">
+<body data-build="2026-08-12.8">
 <script>console.log('СИМВОЛ превью · сборка', document.body.dataset.build);</script>
 
 <div class="ldr" id="pageLdr" aria-hidden="true">
@@ -842,6 +869,24 @@
   </div>
 </section>
 
+<!-- СКРОЛЛ-КИНО: Ласка, закат → звёзды (кадры листает скролл) -->
+<section class="skino" id="skino">
+  <canvas id="skCv" aria-hidden="true"></canvas>
+  <div class="sk-shade"></div>
+  <div class="sk-load" id="skLoad" aria-hidden="true"><i></i></div>
+  <div class="sk-cap c1" id="skCap1">
+    <p class="eyebrow">Ласка · Крым · скролл управляет временем</p>
+    <h2 class="display">Терраса, где ужин<br>длиннее заката</h2>
+  </div>
+  <div class="sk-cap c2" id="skCap2">
+    <h2 class="display">Прокрутите —<br>и день погаснет</h2>
+  </div>
+  <div class="sk-cap c3" id="skCap3">
+    <h2 class="display">…а Млечный Путь —<br><em>включится</em></h2>
+    <a class="btn btn-fill" href="#lead">Выбрать апартаменты у моря</a>
+  </div>
+</section>
+
 <!-- АКЦИИ -->
 <section class="promos" id="promos">
   <div class="container">
@@ -1155,6 +1200,73 @@
         onUpdate: self => { if (window.__cmpApply && !window.__cmpDragging) window.__cmpApply(92 - self.progress * 84); }
       });
     });
+
+    /* --- скролл-кино Ласки: 100 кадров, закат → звёзды --- */
+    (function(){
+      const sk = document.getElementById('skino');
+      if (!sk) return;
+      if (matchMedia('(prefers-reduced-motion: reduce)').matches){ sk.classList.add('no-motion'); return; }
+      const cv = document.getElementById('skCv'), ctx = cv.getContext('2d');
+      const N = 100, SRC = i => 'img/laska-kino/k_' + String(i + 1).padStart(3, '0') + '.webp';
+      const bmps = new Array(N); let loaded = 0, started = false, cur = -1;
+      const bar = document.querySelector('#skLoad i'), loadEl = document.getElementById('skLoad');
+      function draw(i){
+        const im = bmps[i]; if (!im || !cv.width) return; cur = i;
+        const iw = im.width || im.naturalWidth, ih = im.height || im.naturalHeight;
+        const cw = cv.width, ch = cv.height, ir = iw / ih, cr = cw / ch;
+        let w, h, x, y;
+        if (ir > cr){ h = ch; w = h * ir; x = (cw - w) / 2; y = 0; }
+        else { w = cw; h = w / ir; x = 0; y = (ch - h) / 2; }
+        ctx.drawImage(im, x, y, w, h);
+      }
+      function resize(){
+        cv.width = cv.clientWidth * Math.min(devicePixelRatio || 1, 2);
+        cv.height = cv.clientHeight * Math.min(devicePixelRatio || 1, 2);
+        if (cur >= 0) draw(cur);
+      }
+      addEventListener('resize', resize);
+      /* плавность: кадры не просто грузим, а ЗАРАНЕЕ декодируем в ImageBitmap —
+         рисование становится мгновенным, без микрофризов декодирования */
+      function loadFrame(i){
+        const viaImg = () => new Promise(res => {
+          const im = new Image();
+          im.onload = () => res(im); im.onerror = () => res(null);
+          im.src = SRC(i);
+        });
+        const p = window.createImageBitmap
+          ? fetch(SRC(i)).then(r => r.blob()).then(b => createImageBitmap(b)).catch(viaImg)
+          : viaImg();
+        p.then(im => {
+          bmps[i] = im; loaded++;
+          if (bar) bar.style.width = (loaded / N * 100) + '%';
+          if (loaded === N){ loadEl.classList.add('done'); resize(); draw(0); }
+        });
+      }
+      function startLoad(){
+        if (started) return; started = true;
+        for (let i = 0; i < N; i++) loadFrame(i);
+      }
+      /* начинаем качать за два экрана до секции */
+      if ('IntersectionObserver' in window){
+        new IntersectionObserver((es, o) => {
+          if (es.some(e => e.isIntersecting)){ startLoad(); o.disconnect(); }
+        }, { rootMargin: '200% 0px' }).observe(sk);
+      } else startLoad();
+      const skCaps = [
+        { id:'skCap1', a:.02, b:.30 },
+        { id:'skCap2', a:.38, b:.62 },
+        { id:'skCap3', a:.74, b:1.01 }
+      ];
+      ScrollTrigger.create({
+        trigger: sk, start: 'top top', end: '+=320%', pin: true, scrub: .6,
+        onUpdate(self){
+          const f = Math.min(N - 1, Math.round(self.progress * (N - 1)));
+          if (f !== cur) draw(f);
+          skCaps.forEach(c => document.getElementById(c.id).classList.toggle('on', self.progress >= c.a && self.progress <= c.b));
+        }
+      });
+      resize();
+    })();
 
     /* reveal-анимации */
     gsap.utils.toArray('.reveal').forEach(el=>{
